@@ -261,7 +261,6 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	}while (!(ch == 13));
 	
 	LoadMB(dsmb,"dsmaybay");
-//	XoaDSCB(dscb);
 	LoadDSCB(dscb);
 	
 	switch(i){
@@ -282,7 +281,8 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 		case 4:
 			{
 				system("cls");
-				Datve(dscb,tree);
+				Datve(dscb,tree,dsmb);
+				SaveDSCB(dscb);
 				break;
 			}
 		case 5:

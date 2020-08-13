@@ -205,7 +205,6 @@ int HieuungthongtinMB(Listmaybay dsmb){
 			if (t==i){ 
 				HieuungMB(t,1,dsmb);
 			}else HieuungMB(t,2,dsmb);
-//			if(t%10 == 0) cout<<endl; 
 		}
 		do{
 	            ch = getch();
@@ -225,6 +224,7 @@ int HieuungthongtinMB(Listmaybay dsmb){
 	}while (!(ch == 13));
 			return i;
 }
+
 
 
 void XoaMB(Listmaybay &dsmb,CBPTR First){
@@ -268,7 +268,7 @@ void XoaMB(Listmaybay &dsmb,CBPTR First){
 			}
 		}
 			
-}
+}	
 
 void SaveMB(Listmaybay &dsmb,char *filename) {
  FILE * f;
@@ -1302,7 +1302,7 @@ int Thongkeluotchuyenbay(CBPTR First,Listmaybay dsmb){
 	while(true){
 		
 		if(dsmb.n == NULL){
-		cout<<"CHUA CÃ“ MAY BAY TRONG HE THONG!!!"<<endl;
+		cout<<"CHUA CÓ MAY BAY TRONG HE THONG!!!"<<endl;
 		system("pause");
 		return true;		
 		}
@@ -1524,10 +1524,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 	}else{
 		rp = p;
 		if(rp->pRight == NULL){
-		// p lÃ  nÃºt lÃ¡ hoac la nut chi co cay con ben trai
+		// p là nút lá hoac la nut chi co cay con ben trai
 			p = rp->pLeft;
 		}else if(rp->pLeft == NULL){
-		// p lÃ  nut co cay con ben phai
+		// p là nut co cay con ben phai
 			p = rp->pRight;
 		}else{
 			Xoanode2con(rp->pRight);			
@@ -1548,10 +1548,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 //		}else{
 //			rp = p;
 //			if(rp->pRight == NULL){
-//			// p lÃ  nÃºt lÃ¡ hoac la nut chi co cay con ben trai
+//			// p là nút lá hoac la nut chi co cay con ben trai
 //				p = rp->pLeft;
 //			}else if(rp->pLeft == NULL){
-//			// p lÃ  nut co cay con ben phai
+//			// p là nut co cay con ben phai
 //				p = rp->pRight;
 //			}else{
 //				Xoanode2con(rp->pRight);			
@@ -1724,8 +1724,6 @@ void LietkeDSHK_CB(CBPTR First,HKPTR tree){
 ////////////////// Dat Ve /////////////////////
 
 
-char mang[200] ;
-
 
 void ve(int i,int f,Chuyenbay cb){
 	HANDLE hConsoleColor;
@@ -1742,29 +1740,51 @@ void tomauchu(string chu,int f){
 	cout<<chu;
 }
 
-int Chonchongoi(Chuyenbay cb){
-	string tieude = "Chon ghe ngoi";
-	string ghedadat = "mau do: da dat";
+int Chonchongoi(Chuyenbay cb,Listmaybay dsmb){
+	string tieude = "		CHON VI TRI NGOI ";
+	string ghedadat = "	mau do: da dat";
 	string ghechuadat = "mau xanh: chua dat";
-	int i=1;
+	
+	int ktmb = SearchMB(dsmb,cb.sohieumb);	
+
+	
+//	int i=0;
+	int i;
 	char ch;
 	do{
 		system("cls");
-		tomauchu(tieude,11);cout<<"   ";
+		tomauchu(tieude,11);cout<<endl;
 		tomauchu(ghedadat,12);cout<<"   ";
 		tomauchu(ghechuadat,2);cout<<endl;
-		for(int t=0;t<=120;t++){	
-			if (t==i){ 
-				ve(t,1,cb);
-			}else{
-				if(strcmp(cb.danhsachve.vecb[t].Cmnd,"NOT")==0){
-					ve(t,2,cb);
-				}else{
-					ve(t,12,cb);
-				}
-			} 
-			if(t%10 == 0) cout<<endl; 
+//		for(int t=0;t<=120;t++){	
+//			if (t==i){ 
+//				ve(t,1,cb);
+//			}else{
+//				if(strcmp(cb.danhsachve.vecb[t].Cmnd,"NOT")==0){
+//					ve(t,2,cb);
+//				}else{
+//					ve(t,12,cb);
+//				}
+//			} 
+//			if(t%10 == 0) cout<<endl; 
+//		}
+
+
+			if (ktmb != -1){
+		cout<<"ok"<<endl;
+		cout<<dsmb.nodes[ktmb]->sodong<<endl;
 		}
+		
+		for(int j = 0;j<dsmb.nodes[ktmb]->sodong;j++){
+			int k = 0;
+			for(i = j;i<=cb.danhsachve.n;i=j+k*dsmb.nodes[ktmb]->sodong){
+				ve(i,1,cb);	
+				k++;		
+			}
+			cout<<endl;
+		}
+
+
 		do{
 	            ch = getch();
 	            if (ch==224) ch=getch();
@@ -1790,12 +1810,12 @@ int Chonchongoi(Chuyenbay cb){
 				return -1;
 			}
 	}while (!(ch == 13 ));
-	return i;	
+//	return i;	
 }
 
 
 int Searchchongoi(CBPTR p,char *vitringoi){
-		//p lÃ  vi tri cua chuyen bay can dat
+		//p là vi tri cua chuyen bay can dat
 	for(int i=0;i<p->cb.danhsachve.n;i++){
 		if(p->cb.danhsachve.vecb[i].chongoi.compare(vitringoi)==0 ){
 //		if(strcmp(p->cb.danhsachve.vecb[i].chongoi,vitringoi)==0 ){
@@ -1811,7 +1831,7 @@ int Searchchongoi(CBPTR p,char *vitringoi){
 	
 }
 
-void Datve(CBPTR &First,HKPTR &tree){
+void Datve(CBPTR &First,HKPTR &tree,Listmaybay dsmb){
 	char diadiemden[30],Macbdatve[16];
 	char Cmnddatve[11];
 	char xacnhan[2],vitridat[4];
@@ -1855,7 +1875,7 @@ void Datve(CBPTR &First,HKPTR &tree){
 				// chon vi tri ngoi 
 				Loop1:
 				system("cls");
-				int vitridat = Chonchongoi(p->cb);
+				int vitridat = Chonchongoi(p->cb,dsmb);
 				if(vitridat = -1) return;
 				system("cls");
 				if(strcmp(p->cb.danhsachve.vecb[vitridat].Cmnd,"NOT")==0){
