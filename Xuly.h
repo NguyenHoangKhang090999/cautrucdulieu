@@ -1030,6 +1030,10 @@ void LoadDSCB(CBPTR &First){
 	Chuyenbay cb;
 	filein.open("dschuyenbay.txt",ios::in);	 
 	
+    if (First != NULL){
+        return;
+	}
+	
 	if (filein.fail()) 
 	{ 
 	    // file is empty 
