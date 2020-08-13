@@ -935,7 +935,7 @@ void XoaCB(CBPTR &First ){
 
 void SaveVECB(ofstream &fileout,Chuyenbay cb){
 	for(int i=0;i<cb.danhsachve.n;i++){
-		fileout<<cb.danhsachve.vecb[i].chongoi<<",";
+		fileout<<cb.danhsachve.vecb[i].chongoi<<"-";
 		fileout<<cb.danhsachve.vecb[i].Cmnd<<",";
 	}	
 }
@@ -953,31 +953,33 @@ void SaveCB(ofstream &fileout,Chuyenbay cb){
 	fileout<<cb.date.phut<<" ";
 	fileout<<cb.danhsachve.n<<" ";
 	fileout<<cb.danhsachve.sldb<<" ";
-//	SaveVECB(fileout,cb);
+	SaveVECB(fileout,cb);
 	
 }
 
 void SaveDSCB(CBPTR First){
 	ofstream fileout;
 	fileout.open("dschuyenbay.txt",ios_base::out);
-	for(CBPTR p = First;p!=NULL;p=p->next){
+	CBPTR p;
+	for(p = First;p->next!=NULL;p=p->next){
 		SaveCB(fileout,p->cb);
 		fileout<<endl;
 	}
+	SaveCB(fileout,p->cb);	
 	fileout.close();
 	return;
 }
 
 void LoadVECB(ifstream &filein,Chuyenbay &cb){
+	cb.danhsachve.vecb = new Ve[cb.danhsachve.n];
 	for(int i=0;i<cb.danhsachve.n;i++){
-		string tam;
-		getline(filein,cb.danhsachve.vecb[i].chongoi,',');
+		
+		getline(filein,cb.danhsachve.vecb[i].chongoi,'-');
+		
 		string cmndtam;
 		getline(filein,cmndtam,',');
 		strcpy(cb.danhsachve.vecb[i].Cmnd,cmndtam.c_str());
-//		filein>>cb.danhsachve.vecb[i].Cmnd;
-//		filein.seekg(1);
-	}	
+	}		
 }
 
 void LoadCB(ifstream &filein,Chuyenbay &cb){
@@ -988,6 +990,7 @@ void LoadCB(ifstream &filein,Chuyenbay &cb){
 		strcpy(cb.ID,tamid.c_str());
 //		filein>>cb.ID;
 //		filein.seekg(1);
+
 		// dia diem
 		string dd;
 		getline(filein,dd,',');
@@ -1014,60 +1017,37 @@ void LoadCB(ifstream &filein,Chuyenbay &cb){
 		filein>>cb.date.phut;
 		filein>>cb.danhsachve.n;
 		filein>>cb.danhsachve.sldb;
+		// load danh sach ve chuyen bay 
+		LoadVECB(filein,cb);
 		
 		string tam;
 		getline(filein,tam);
 		
-//		LoadVECB(filein,cb);
-
-//	for(int i=0;i<3;i++){
-//		string tam;
-//		getline(filein,tam,' ');
-//		getline(filein,cb.danhsachve.vecb[0].chongoi,',');
-//		cb.danhsachve.vecb[i].chongoi = tam;
-//		cb.danhsachve.vecb[0].chongoi.append("A");
-//		strcpy(cb.danhsachve.vecb[0].chongoi,tam.c_str());
-//		string cmndtam;
-//		getline(filein,cmndtam,',');
-//		strcpy(cb.danhsachve.vecb[0].Cmnd,cmndtam.c_str());
-//	}
-		
 }
 
-//void LoadDSCB(CBPTR &First){
-//	ifstream filein;
-//	Chuyenbay cb;
-//	filein.open("dschuyenbay.txt",ios::in);
-//	while(!filein.eof()){		
-//		LoadCB(filein,cb);
-////		cout<<" ok";
-//		ThemcuoiCB(First,cb);
-//	}
-//	filein.close();
-////	cout<<" load ht";
-//	return;
-//}
-
-void LoadDSCB(CBPTR &First)
-{
+void LoadDSCB(CBPTR &First){
 	ifstream filein;
 	Chuyenbay cb;
-	string k;
-	filein.open("dschuyenbay.txt",ios::in);
-	if(filein.fail())
-	{
-		cout<<"Khong tim thay file";
-	}
-	cout<<"Doc file thanh cong ";
-	while(!filein.eof()){
+	filein.open("dschuyenbay.txt",ios::in);	 
 	
-		LoadCB(filein,cb);
-		
+	if (filein.fail()) 
+	{ 
+	    // file is empty 
+	    return;
+	} 
+	while(!filein.eof()){
+					
+		LoadCB(filein,cb);			
+//		string tam;
+//		getline(filein,tam);
 		ThemcuoiCB(First,cb);
+		
 	}
 	filein.close();
+//	cout<<" load ht";
 	return;
 }
+
 
 void SapXepCBTheoID(CBPTR &First){
  	CBPTR p, q;

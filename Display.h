@@ -249,11 +249,11 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	        } while (!(ch==224||ch==13||ch==27||ch==80||ch==72));
 		if(ch==80){         //ky tu xuong
 	        i++; 
-	        if (i>10) i = 2; //het dong k quay lai dong 2
+	        if (i>9) i = 2; //het dong k quay lai dong 2
 	    }
 	   	if (ch==72){          //ky tu len
 	        i--; 
-	        if (i<2) i = 10; 
+	        if (i<2) i = 9; 
 	    }
 	    if(ch == 27){
 				exit(0);
