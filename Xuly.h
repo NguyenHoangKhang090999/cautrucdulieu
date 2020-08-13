@@ -191,7 +191,7 @@ void HieuungMB(int i,int f,Listmaybay dsmb){
 
 
 int HieuungthongtinMB(Listmaybay dsmb){
-	int i=1;
+	int i=0;
 	char ch;
 
 	do{
@@ -228,7 +228,7 @@ int HieuungthongtinMB(Listmaybay dsmb){
 
 
 
-void XoaMB(Listmaybay &dsmb,CBPTR &First){
+void XoaMB(Listmaybay &dsmb,CBPTR First){
 	string yeucau = "Ban that su muon xoa ?";
 	Loop:
 	if(dsmb.n == 0){
@@ -242,31 +242,31 @@ void XoaMB(Listmaybay &dsmb,CBPTR &First){
 		return;
 	} 
 		for(CBPTR p = First;p!=NULL;p=p->next){
-			if(strcmp(p->cb.sohieumb,dsmb.nodes[ixoamb]->sohieu) == 0 && ((p->cb.trangthai==1) || (p->cb.trangthai==2)) ){
+			if(strcmp(p->cb.sohieumb,dsmb.nodes[ixoamb]->sohieu) == 0 && ((p->cb.trangthai==1) ) ){
+				system("cls");
 				cout<<"may bay dang thuc hien chuyen bay "<<p->cb.ID<<endl;
+				system("pause");
+				return;
+			}	
+		}	
+		
+		int ixacnhan = Hieuungyesno(yeucau);	
+		if(ixacnhan == -1 || ixacnhan == 1){
+			return;
+		}else{								
+			if(ixoamb = dsmb.n-1){
+				delete dsmb.nodes[ixoamb];
+				dsmb.n--;
 				return;
 			}else{
-				int ixacnhan = Hieuungyesno(yeucau);	
-				if(ixacnhan == -1 || ixacnhan == 1){
-					return;
-				}else{								
-					if(ixoamb = dsmb.n-1){
-						delete dsmb.nodes[ixoamb];
-						dsmb.n--;
-						return;
-					}else{
-						delete dsmb.nodes[ixoamb];
-						for(int i=ixoamb+1;i<dsmb.n;i++){
-							dsmb.nodes[i-1]=dsmb.nodes[i];				
-						}
-						dsmb.n--;
-						return;
-					}
-
+				delete dsmb.nodes[ixoamb];
+				for(int i=ixoamb+1;i<dsmb.n;i++){
+					dsmb.nodes[i-1]=dsmb.nodes[i];				
 				}
-			}		
-		
-		}		
+				dsmb.n--;
+				return;
+			}
+		}	
 }	
 
 void SaveMB(Listmaybay &dsmb,char *filename) {
@@ -1301,7 +1301,7 @@ int Thongkeluotchuyenbay(CBPTR First,Listmaybay dsmb){
 	while(true){
 		
 		if(dsmb.n == NULL){
-		cout<<"CHUA C” MAY BAY TRONG HE THONG!!!"<<endl;
+		cout<<"CHUA C√ì MAY BAY TRONG HE THONG!!!"<<endl;
 		system("pause");
 		return true;		
 		}
@@ -1523,10 +1523,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 	}else{
 		rp = p;
 		if(rp->pRight == NULL){
-		// p l‡ n˙t l· hoac la nut chi co cay con ben trai
+		// p l√† n√∫t l√° hoac la nut chi co cay con ben trai
 			p = rp->pLeft;
 		}else if(rp->pLeft == NULL){
-		// p l‡ nut co cay con ben phai
+		// p l√† nut co cay con ben phai
 			p = rp->pRight;
 		}else{
 			Xoanode2con(rp->pRight);			
@@ -1547,10 +1547,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 //		}else{
 //			rp = p;
 //			if(rp->pRight == NULL){
-//			// p l‡ n˙t l· hoac la nut chi co cay con ben trai
+//			// p l√† n√∫t l√° hoac la nut chi co cay con ben trai
 //				p = rp->pLeft;
 //			}else if(rp->pLeft == NULL){
-//			// p l‡ nut co cay con ben phai
+//			// p l√† nut co cay con ben phai
 //				p = rp->pRight;
 //			}else{
 //				Xoanode2con(rp->pRight);			
@@ -1794,7 +1794,7 @@ int Chonchongoi(Chuyenbay cb){
 
 
 int Searchchongoi(CBPTR p,char *vitringoi){
-		//p l‡ vi tri cua chuyen bay can dat
+		//p l√† vi tri cua chuyen bay can dat
 	for(int i=0;i<p->cb.danhsachve.n;i++){
 		if(p->cb.danhsachve.vecb[i].chongoi.compare(vitringoi)==0 ){
 //		if(strcmp(p->cb.danhsachve.vecb[i].chongoi,vitringoi)==0 ){
