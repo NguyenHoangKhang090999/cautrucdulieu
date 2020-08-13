@@ -227,7 +227,6 @@ int HieuungthongtinMB(Listmaybay dsmb){
 }
 
 
-
 void XoaMB(Listmaybay &dsmb,CBPTR First){
 	string yeucau = "Ban that su muon xoa ?";
 	Loop:
@@ -241,6 +240,7 @@ void XoaMB(Listmaybay &dsmb,CBPTR First){
 	if(ixoamb == -1){
 		return;
 	} 
+
 		for(CBPTR p = First;p!=NULL;p=p->next){
 			if(strcmp(p->cb.sohieumb,dsmb.nodes[ixoamb]->sohieu) == 0 && ((p->cb.trangthai==1) ) ){
 				system("cls");
@@ -254,20 +254,21 @@ void XoaMB(Listmaybay &dsmb,CBPTR First){
 		if(ixacnhan == -1 || ixacnhan == 1){
 			return;
 		}else{								
-			if(ixoamb = dsmb.n-1){
+			if(ixoamb == dsmb.n-1){
 				delete dsmb.nodes[ixoamb];
 				dsmb.n--;
 				return;
 			}else{
 				delete dsmb.nodes[ixoamb];
-				for(int i=ixoamb+1;i<dsmb.n;i++){
-					dsmb.nodes[i-1]=dsmb.nodes[i];				
+				for(int i=ixoamb;i<=dsmb.n-1;i++){
+					dsmb.nodes[i]=dsmb.nodes[i+1];				
 				}
 				dsmb.n--;
 				return;
 			}
-		}	
-}	
+		}
+			
+}
 
 void SaveMB(Listmaybay &dsmb,char *filename) {
  FILE * f;
