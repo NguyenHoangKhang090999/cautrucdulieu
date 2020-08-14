@@ -17,6 +17,7 @@ int Hieuungyesno(string yeucau);
 int NhapHK(HKPTR &tree,Hanhkhach &hk);
 int  NhapDSHK(HKPTR &tree);
 int HieuungluachonLK_DSHK_CB(string yeucau);
+int Chonchongoi(Chuyenbay cb,Listmaybay dsmb,string tieude);
 
 void gotoxy(short x,short y)
 {
@@ -959,6 +960,9 @@ void SaveCB(ofstream &fileout,Chuyenbay cb){
 }
 
 void SaveDSCB(CBPTR First){
+	if(First == NULL){
+		return;
+	}
 	ofstream fileout;
 	fileout.open("dschuyenbay.txt",ios_base::out);
 	CBPTR p;
@@ -989,26 +993,19 @@ void LoadCB(ifstream &filein,Chuyenbay &cb){
 		string tamid;
 		getline(filein,tamid,',');
 		strcpy(cb.ID,tamid.c_str());
-//		filein>>cb.ID;
-//		filein.seekg(1);
 
 		// dia diem
 		string dd;
 		getline(filein,dd,',');
 		strcpy(cb.diadiem,dd.c_str());
-//		filein>>cb.diadiem;
-//		filein.seekg(1);
 
 		// so hieu mb
 		string sh;
 		getline(filein,sh,',');
 		strcpy(cb.sohieumb,sh.c_str());
-//		filein>>cb.sohieumb;
-//		filein.seekg(1);
 
 		// trang thai
 		filein>>cb.trangthai;
-//		filein.seekg(1);
 
 		//ngay thang nam
 		filein>>cb.date.ngay;
@@ -1018,7 +1015,9 @@ void LoadCB(ifstream &filein,Chuyenbay &cb){
 		filein>>cb.date.phut;
 		filein>>cb.danhsachve.n;
 		filein>>cb.danhsachve.sldb;
+		filein.ignore(1);
 		// load danh sach ve chuyen bay 
+
 		LoadVECB(filein,cb);
 		
 		string tam;
@@ -1043,13 +1042,10 @@ void LoadDSCB(CBPTR &First){
 	while(!filein.eof()){
 					
 		LoadCB(filein,cb);			
-//		string tam;
-//		getline(filein,tam);
 		ThemcuoiCB(First,cb);
 		
 	}
 	filein.close();
-//	cout<<" load ht";
 	return;
 }
 
@@ -1241,7 +1237,7 @@ void LietkeDSCBYeuCau(CBPTR First){
 
 // liet ke danh sach ghe trong cua mot chuyen bay 
 
-void DSVETrong_Tudong(CBPTR First){
+void DSVETrong_Tudong(CBPTR First,Listmaybay dsmb){
 
 	int icb = HieuungthongtinDatve(First);
 	if(icb == -1){
@@ -1251,16 +1247,19 @@ void DSVETrong_Tudong(CBPTR First){
 	int k=1;
 	for(CBPTR p = First;p!=NULL && (p->cb.trangthai == 1) ;p=p->next ){
 		if(k == icb){
-			cout<<"      DANH SACH VE CON TRONG CUA CHUYEN BAY "<<p->cb.ID<<endl<<endl;
-			Lietkechongoi(p->cb);
-			return;
+//			cout<<"      DANH SACH VE CON TRONG CUA CHUYEN BAY "<<p->cb.ID<<endl<<endl;
+//			Lietkechongoi(p->cb);
+//			return;
+			string tieude = " DANH SACH VI TRI NGOI ";			
+		    Chonchongoi(p->cb,dsmb,tieude);
+			return;			
 		}
 		k++;
 	}	
 }
 
 
-void DSVETrong_Macb(CBPTR First){
+void DSVETrong_Macb(CBPTR First,Listmaybay dsmb){
 	
 	char Macb[16];
 	Loop:
@@ -1275,21 +1274,24 @@ void DSVETrong_Macb(CBPTR First){
 		goto Loop;
 	}	
 	//danh sach vi tri con trong
-	cout<<"       DANH SACH VE CON TRONG CUA CHUYEN BAY "<<Macb<<endl;
-	Lietkechongoi(IDCB->cb);
-	return;	
+		string tieude = " DANH SACH VI TRI NGOI ";
+		Chonchongoi(IDCB->cb,dsmb,tieude);
+		return;
+	
+//	cout<<"       DANH SACH VE CON TRONG CUA CHUYEN BAY "<<Macb<<endl;
+//	Lietkechongoi(IDCB->cb);
 }
 
 
-void LietkeDSVETrong(CBPTR First){
+void LietkeDSVETrong(CBPTR First,Listmaybay dsmb){
 	string yeucau = "Liet ke danh sach ve trong thuoc chuyen bay : ";
 	int ixacnhan = HieuungluachonLK_DSHK_CB(yeucau);
 	if(ixacnhan == -1){
 		return;
 	}else if(ixacnhan == 0){
-		DSVETrong_Macb(First);
+		DSVETrong_Macb(First,dsmb);
 	}else{		
-		DSVETrong_Tudong(First);
+		DSVETrong_Tudong(First,dsmb);
 	}
 		
 }
@@ -1729,7 +1731,6 @@ void ve(int i,int f,Chuyenbay cb){
 	HANDLE hConsoleColor;
     hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);		
 	SetConsoleTextAttribute(hConsoleColor, f); // f la mau
-//	cout<<mang[i]<<" ";
 	cout<<cb.danhsachve.vecb[i].chongoi<<" ";
 }
 
@@ -1740,77 +1741,74 @@ void tomauchu(string chu,int f){
 	cout<<chu;
 }
 
-int Chonchongoi(Chuyenbay cb,Listmaybay dsmb){
-	string tieude = "		CHON VI TRI NGOI ";
-	string ghedadat = "	mau do: da dat";
+int Chonchongoi(Chuyenbay cb,Listmaybay dsmb,string tieude){
+//	string tieude = "	  CHON VI TRI DAT VE          ESC : Ket thuc ";
+	string chucnang = "          ESC : Ket thuc ";
+	string ghedadat = "  mau do: da dat";
 	string ghechuadat = "mau xanh: chua dat";
+	int ktmb = SearchMB(dsmb,cb.sohieumb);
 	
-	int ktmb = SearchMB(dsmb,cb.sohieumb);	
-
+	//so day va dong cua may bay
+	int soday = dsmb.nodes[ktmb]->soday;
+	int sodong = dsmb.nodes[ktmb]->sodong ;	
 	
-//	int i=0;
-	int i;
+	int i=0; // vi tri cua ghe trong mang
 	char ch;
 	do{
 		system("cls");
-		tomauchu(tieude,11);cout<<endl;
+		gotoxy((sodong+10),0);
+		tomauchu(tieude,11);
+		tomauchu(chucnang,11);cout<<endl;
+		gotoxy((sodong),1);
 		tomauchu(ghedadat,12);cout<<"   ";
-		tomauchu(ghechuadat,2);cout<<endl;
-//		for(int t=0;t<=120;t++){	
-//			if (t==i){ 
-//				ve(t,1,cb);
-//			}else{
-//				if(strcmp(cb.danhsachve.vecb[t].Cmnd,"NOT")==0){
-//					ve(t,2,cb);
-//				}else{
-//					ve(t,12,cb);
-//				}
-//			} 
-//			if(t%10 == 0) cout<<endl; 
-//		}
-
-
-			if (ktmb != -1){
-		cout<<"ok"<<endl;
-		cout<<dsmb.nodes[ktmb]->sodong<<endl;
+		tomauchu(ghechuadat,2);cout<<endl<<endl;
+		
+		int demdong = 0;
+		int demday = 0;
+		for(int t=0;t<cb.danhsachve.n;t++){
+			demdong++;			
+			if (t==i){ 
+				ve(t,1,cb);
+			}else if(strcmp(cb.danhsachve.vecb[t].Cmnd,"NOT")==0){
+				ve(t,2,cb);			
+			}else{
+				ve(t,12,cb);
+			}			
+			if(demdong%sodong == 0){
+				cout<<endl;
+				demday++;	
+				if(demday == (soday/2 ) )	cout<< endl;
+			} 			
 		}
 		
-		for(int j = 0;j<dsmb.nodes[ktmb]->sodong;j++){
-			int k = 0;
-			for(i = j;i<=cb.danhsachve.n;i=j+k*dsmb.nodes[ktmb]->sodong){
-				ve(i,1,cb);	
-				k++;		
-			}
-			cout<<endl;
-		}
-
-
 		do{
 	            ch = getch();
 	            if (ch==224) ch=getch();
 	        } while (!(ch==224||ch==13||ch==27||ch==80||ch==72||ch==75||ch==77));
 	        if(ch==80){         //ky tu xuong
-	             i=i+10; 
-	             if (i>120) i = i%100; 
+	             i=i+sodong; 
+	             if (i>cb.danhsachve.n-1) i = i%(soday*sodong); 
 	        }
 	        if (ch==72)          //ky tu len
 	        {
-	            i=i-10; 
-	            if (i<1) i = 120+i; 
+	            i=i-sodong; 
+	            if (i<0) i = (soday*sodong)+i; 
 	   		}
 	   		if(ch==75){			// ky tu sang trai
 			   	i--;
-				if(i<1) i== 120;
+//				if(i<0) i = cb.danhsachve.n-1;
+				if((i+1) % sodong ==0 ) i = i+sodong;
 			}
 			if(ch==77){			// ky tu sang phai
 				i++;
-			   if(i>120) i==1;
+//			   if(i>cb.danhsachve.n-1) i=0;
+				if(i % sodong == 0 ) i = i-sodong;
 			}
 			if(ch==27){
 				return -1;
 			}
 	}while (!(ch == 13 ));
-//	return i;	
+	return i;	
 }
 
 
@@ -1841,7 +1839,14 @@ void Datve(CBPTR &First,HKPTR &tree,Listmaybay dsmb){
 		if(icb == -1) return;
 		int k = 1;
 		for(CBPTR p = First;p!=NULL && (p->cb.trangthai == 1) ;p=p->next){
+			
 			if(k == icb){
+				if(p->cb.danhsachve.sldb == p->cb.danhsachve.n){
+					cout<<"Da het ve !!!"<<endl;
+					system("pause");
+					return;
+				}
+				
 				Loop:
 				system("cls");
 				Thongtinchuyenbay(p->cb);
@@ -1858,6 +1863,7 @@ void Datve(CBPTR &First,HKPTR &tree,Listmaybay dsmb){
 						NhapDSHK(tree);
 //						int nhaphk = NhapDSHK(tree);
 //						if(nhaphk != 1) return;
+						goto Loop1;
 					}	
 				}
 				
@@ -1875,28 +1881,35 @@ void Datve(CBPTR &First,HKPTR &tree,Listmaybay dsmb){
 				// chon vi tri ngoi 
 				Loop1:
 				system("cls");
-				int vitridat = Chonchongoi(p->cb,dsmb);
-				if(vitridat = -1) return;
+				string tieude="CHON VI TRI DAT VE";
+				int vitridat = Chonchongoi(p->cb,dsmb,tieude);
+				if(vitridat == -1){
+					system("cls");
+					string yeucau = "Ban muon huy qua trinh dat ve tren chuyen bay ? ";
+					int ixacnhan = Hieuungyesno(yeucau);
+					if(ixacnhan == -1 || ixacnhan == 1){
+						goto Loop1;
+					}else{
+						return;
+					}
+				} 
 				system("cls");
 				if(strcmp(p->cb.danhsachve.vecb[vitridat].Cmnd,"NOT")==0){
 
 					strcpy(p->cb.danhsachve.vecb[vitridat].Cmnd,Cmnddatve);
+//					p->cb.danhsachve.vecb[vitridat].Cmnd = Cmnddatve;
 					p->cb.danhsachve.sldb++;
 					if(p->cb.danhsachve.sldb == p->cb.danhsachve.n){
 						p->cb.trangthai = 2;	
 					}
-					cout<<"Da dat ve hoan tat"<<endl;
+					cout<<"Da dat ve hoan tat!!!"<<endl;
 					Thongtinchuyenbay(p->cb);
 					system("pause");
 					return;
 									
 				}else{
-					if(p->cb.danhsachve.sldb > p->cb.danhsachve.n){
-						cout<<"Da het ve !!!"<<endl;
-						system("pause");
-						return;
-					}
-					cout<<"Ve da duoc dat, chon ve khac !!!"<<endl;
+
+					cout<<"Vi tri ngoi da duoc dat, vui long chon vi tri khac khac !!!"<<endl;
 					system("pause");
 					goto Loop1;
 				}				

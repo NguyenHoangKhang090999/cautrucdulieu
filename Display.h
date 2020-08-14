@@ -186,6 +186,7 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 			{
 				system("cls");	
 				XoaCB(dscb);
+				SaveDSCB(dscb);
 				break;
 			}
 		case 5:
@@ -306,7 +307,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 		case 8:
 			{
 				system("cls");
-				LietkeDSVETrong(dscb);
+				LietkeDSVETrong(dscb,dsmb);
 				break;
 			}
 		case 9:
