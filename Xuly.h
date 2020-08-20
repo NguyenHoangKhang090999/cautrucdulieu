@@ -19,6 +19,9 @@ int  NhapDSHK(HKPTR &tree);
 int HieuungluachonLK_DSHK_CB(string yeucau);
 int Chonchongoi(Chuyenbay cb,Listmaybay dsmb,string tieude);
 
+
+   
+	
 void gotoxy(short x,short y)
 {
         HANDLE hConsoleOutput;
@@ -44,6 +47,7 @@ int wherey( void )
     GetConsoleScreenBufferInfo(hConsoleOutput, &screen_buffer_info);
     return screen_buffer_info.dwCursorPosition.Y;
 }
+
 
 
 /////////////// May bay ////////////////////
@@ -447,8 +451,20 @@ void ThemcuoiCB (CBPTR &First , Chuyenbay cb) {
 //		     }
 //}
 
+
+
+int TinhNgay(int year, int month, int day) {
+        if (month < 3) {
+            year--;
+            month += 12;
+        }
+        return 365*year + year/4 - year/100 + year/400 + (153*month - 457)/5 + day - 306;
+    }
+
+
 void NhapDate(Date &dt){
 	Loop:
+	system("cls");
 	cout<<"Nhap nam: ";cin>>dt.nam;
 	cout<<"Nhap thang: ";cin>>dt.thang;
 	cout<<"Nhap Ngay: ";cin>>dt.ngay;
@@ -457,35 +473,75 @@ void NhapDate(Date &dt){
 	
 	// kiem tra chinh xac cua date
 //	if()
+	 int y = 1900 + thoigian->tm_year;
+	int m = 1 + thoigian->tm_mon;
+	int d = thoigian->tm_mday;
+	int h = thoigian->tm_hour;
+	int min = thoigian->tm_min;
 	
 	
-	int namhientai = 1900 + thoigian->tm_year;
-	int thanghientai = 1 + thoigian->tm_mon;
-	int ngayhientai = thoigian->tm_mday;
-	int giohientai = thoigian->tm_hour;
-	int phuthientai = thoigian->tm_min;
 	
 	//kiem tra date tao so voi thoi gian thuc
-	if( (namhientai-dt.nam)==0 ){
-		if((thanghientai-dt.thang)==0 && (ngayhientai-dt.ngay)<-7 ){
-			cout<<" Date khong hop le"<<endl;
- 		 	goto Loop;
-		}
-		if((thanghientai-dt.thang)>0 && ( (dt.thang >12) || (dt.thang<1) )){
-     		cout<<" Date khong hop le"<<endl;
- 	        goto Loop;
-		}
-	}else{
-		cout<<" Date khong hop le"<<endl;
- 		goto Loop;
+	if(dt.thang > 0 && dt.thang <= 12){
+		if(dt.thang == 1 || dt.thang == 3 ||dt.thang == 5 || dt.thang == 7 || dt.thang == 8 || dt.thang ==10 || dt.thang == 12){
+			if(dt.ngay <=31 && dt.ngay > 0){
+				if((TinhNgay(dt.nam,dt.thang,dt.ngay) - TinhNgay(y,m,d)) >= 7){
+					cout<<"Hoan Tat!!!"<<endl;
+					return;
+				}else
+					cout<<"Ngay thang khong hop le!!!"<<endl;
+					goto Loop;
+			}else
+				cout<<"Ngay thang khong hop le!!!"<<endl;
+				goto Loop;
+		}else if(dt.thang == 4 || dt.thang == 6 || dt.thang ==9 || dt.thang ==11){
+			if(dt.ngay <=30 && dt.ngay > 0 ){
+				if((TinhNgay(dt.nam,dt.thang,dt.ngay) - TinhNgay(y,m,d)) >= 7){
+					cout<<"Hoan Tat!!!"<<endl;
+					return;
+			}else
+				cout<<"Ngay thang khong hop le!!!"<<endl;
+				goto Loop;
+			}else
+				cout<<"Ngay thang khong hop le!!!"<<endl;
+				goto Loop;
+		}else if(dt.thang == 2){
+			if(dt.nam % 4 == 0 && dt.nam % 100 != 0 || dt.nam % 400 ==0){
+				if(dt.ngay <= 29 && dt.ngay > 0){
+					cout<<"Hoan tat!!!"<<endl;
+					return;
+				}else{
+					cout<<"Ngay thang khong hop le!!!"<<endl;
+					goto Loop;
+				}
+		}else{
+			if(dt.ngay <=28 && dt.ngay > 0){
+						cout<<"Hoan Tat!!!"<<endl;
+						return;
+					}else{
+						cout<<"Ngay thang khong hop le!!!"<<endl;
+						goto Loop;
+						}
+			}
+	
 	}
-
+}else 
+		cout<<"Ngay thang khong hop le!!!"<<endl;
+		goto Loop;
 }
 
-void convertint(int a){
+void UpdateTrangThaiCB(Chuyenbay &cb,Date &dt){
+	 int y = 1900 + thoigian->tm_year;
+	int m = 1 + thoigian->tm_mon;
+	int d = thoigian->tm_mday;
+	int h = thoigian->tm_hour;
+	int min = thoigian->tm_min;
+	if((TinhNgay(dt.nam,dt.thang,dt.ngay) - TinhNgay(y,m,d) < 0)){
+		cb.trangthai = 3;
+	}
+}
 	
 
-}
 
 void NhapDSVE(int day, int dong,Chuyenbay &cb){
 	
@@ -876,7 +932,7 @@ void XoaCB(CBPTR &First ){
 	string yeucau = "Ban co that su muon xoa chuyen bay ?";
 	Loop:
 	if(First == NULL){
-		cout<<"		                    CHUA CO CHUYEN BAY TRONG DANH SACH       ESC : thoat"<<endl;
+		cout<<"		                CHUA CO CHUYEN BAY TRONG DANH SACH       ESC : thoat"<<endl;
 		char ch = getch();
 		if( ch == 27) return;
 		goto Loop;
@@ -1304,7 +1360,7 @@ int Thongkeluotchuyenbay(CBPTR First,Listmaybay dsmb){
 	while(true){
 		
 		if(dsmb.n == NULL){
-		cout<<"CHUA C” MAY BAY TRONG HE THONG!!!"<<endl;
+		cout<<"CHUA C√ì MAY BAY TRONG HE THONG!!!"<<endl;
 		system("pause");
 		return true;		
 		}
@@ -1526,10 +1582,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 	}else{
 		rp = p;
 		if(rp->pRight == NULL){
-		// p l‡ n˙t l· hoac la nut chi co cay con ben trai
+		// p l√† n√∫t l√° hoac la nut chi co cay con ben trai
 			p = rp->pLeft;
 		}else if(rp->pLeft == NULL){
-		// p l‡ nut co cay con ben phai
+		// p l√† nut co cay con ben phai
 			p = rp->pRight;
 		}else{
 			Xoanode2con(rp->pRight);			
@@ -1550,10 +1606,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 //		}else{
 //			rp = p;
 //			if(rp->pRight == NULL){
-//			// p l‡ n˙t l· hoac la nut chi co cay con ben trai
+//			// p l√† n√∫t l√° hoac la nut chi co cay con ben trai
 //				p = rp->pLeft;
 //			}else if(rp->pLeft == NULL){
-//			// p l‡ nut co cay con ben phai
+//			// p l√† nut co cay con ben phai
 //				p = rp->pRight;
 //			}else{
 //				Xoanode2con(rp->pRight);			
@@ -1813,7 +1869,7 @@ int Chonchongoi(Chuyenbay cb,Listmaybay dsmb,string tieude){
 
 
 int Searchchongoi(CBPTR p,char *vitringoi){
-		//p l‡ vi tri cua chuyen bay can dat
+		//p l√† vi tri cua chuyen bay can dat
 	for(int i=0;i<p->cb.danhsachve.n;i++){
 		if(p->cb.danhsachve.vecb[i].chongoi.compare(vitringoi)==0 ){
 //		if(strcmp(p->cb.danhsachve.vecb[i].chongoi,vitringoi)==0 ){
