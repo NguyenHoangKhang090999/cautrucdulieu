@@ -6,7 +6,7 @@
 using namespace std;
 
 
-void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree);
+void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree,Chuyenbay &cb,Date &dt);
 int MenuMB(Listmaybay &dsmb,CBPTR &dscb);
 int MenuCB(Listmaybay &dsmb,CBPTR &dscb);
 
@@ -40,12 +40,13 @@ void Dichuyen(int k,char *Menu[][50]){
 int MenuMB(Listmaybay &dsmb,CBPTR &dscb){
 	
 	system("cls");
-	char MenuMB[][50] = { "----QUAN LY MAY BAY----     ESC-thoat ",
-						"1. Xem danh sach may bay ",
-						"2. Them may bay     ",
-						"3. Xoa may bay      ",
-						"4. Hieu Chinh may bay    ",
-						"5. Thoat                 ",
+	char MenuMB[][100] = { "\t\|-------------------------------|AIR-BUS-MANAGEMENT|-----------------------------|ESC-thoat|",
+						"\t\|\t\t\t\        Xem danh sach may bay                                      |",
+						"\t\|\t\t\t\        Them may bay                                               |",
+						"\t\|\t\t\t\        Xoa may bay                                                |",
+						"\t\|\t\t\t\        Hieu chinh may bay                                         |",
+						"\t\|------------------------------------------------------------------------------------------|",
+						
 	 				};		
 		
 		
@@ -68,7 +69,7 @@ int MenuMB(Listmaybay &dsmb,CBPTR &dscb){
 	        } while (!(ch==224||ch==13||ch==27||ch==80||ch==72));
 		if(ch==80){         //ky tu xuong
 	        i++; 
-	        if (i>6) i = 2; //het dong k quay lai dong 2
+	        if (i>5) i = 2; //het dong k quay lai dong 2
 	    }
 	   	if (ch==72){          //ky tu len
 	        i--; 
@@ -125,13 +126,13 @@ int MenuMB(Listmaybay &dsmb,CBPTR &dscb){
 int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 	
 	system("cls");
-	char MenuMB[][50] = { "----QUAN LY CHUYEN BAY----     ESC-thoat ",
-						"1. Xem danh sach chuyen bay ",
-						"2. Them chuyen bay     ",
-						"3. Xoa chuyen bay      ",
-						"4. Hieu Chinh chuyen bay    ",
-						"5. Huy chuyen bay    ",
-						"6. Thoat               ",
+	char MenuMB[][100] = { "\t\|-------------------------------|AIR-BUS-MANAGEMENT|------------------------------|ESC-thoat| ",
+						"\t\|\t\t\t\       Xem danh sach chuyen bay                                     |",
+						"\t\|\t\t\t\       Them chuyen bay                                              |",
+						"\t\|\t\t\t\       Xoa chuyen bay                                               |",
+						"\t\|\t\t\t\       Hieu chinh chuyen bay                                        |",
+						"\t\|\t\t\t\       Huy chuyen bay                                               |",
+						"\t\|-------------------------------------------------------------------------------------------|",
 	 				};		
 		
 		
@@ -154,7 +155,7 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 	        } while (!(ch==224||ch==13||ch==27||ch==80||ch==72));
 		if(ch==80){         //ky tu xuong
 	        i++; 
-	        if (i>7) i = 2; //het dong k quay lai dong 2
+	        if (i>6) i = 2; //het dong k quay lai dong 2
 	    }
 	   	if (ch==72){          //ky tu len
 	        i--; 
@@ -213,26 +214,28 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 
 
 
-void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
+
+void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree,Chuyenbay &cb,Date &dt){
 	
 	system("cls");
-	char MenuChinh[][1000] = { "-------------------------------AIR-BUS-MANAGEMENT------------------------------   ESC-thoat ",
-						"|\t\t\t\ 1. Quan ly may bay                                                                |",
-						"|\t\t\t\ 2. Quan ly chuyen bay                                                             |",
-						"|\t\t\t\ 3. Dat ve                                                                         |",
-						"|\t\t\t\ 4. Huy ve                                                                         |",
-						"|\t\t\t\ 5. Danh sach hanh khach - chuyen bay                                              |",
-						"|\t\t\t\ 6. Danh sach chuyen bay theo yeu cau                                              |",
-						"|\t\t\t\ 7. Danh sach ve trong - chuyen bay                                                |",
-						"|\t\t\t\ 8. Thong ke luot thuc hien chuyen bay                                             |",
-						"------------------------------------------------------------------------------------------------------------",
-						
+	char MenuChinh[][1000] = { "\t\|-------------------------------|AIR-BUS-MANAGEMENT|-----------------------------|ESC-thoat| ",
+						"\t\|\t\t\t\        Quan ly may bay                                            |",
+						"\t\|\t\t\t\        Quan ly chuyen bay                                         |",
+						"\t\|\t\t\t\        Dat ve                                                     |",
+						"\t\|\t\t\t\        Huy ve                                                     |",
+						"\t\|\t\t\t\        Danh sach hanh khach - chuyen bay                          |",
+						"\t\|\t\t\t\        Danh sach chuyen bay theo yeu cau                          |",
+						"\t\|\t\t\t\        Danh sach ve trong - chuyen bay                            |",
+						"\t\|\t\t\t\        Thong ke luot thuc hien chuyen bay                         |",
+						"\t\|------------------------------------------------------------------------------------------|",
+	
 	 				};
 	
 	char ch;
 	int i =2 ;
 	do{
 		system("cls");
+		
 		for(int t=1;t<=10;t++){
 			if (t==i){ 
 //				gotoxy(40,t-1);
@@ -263,6 +266,8 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	
 	LoadMB(dsmb,"dsmaybay");
 	LoadDSCB(dscb);
+	UpdateTrangThaiCB(cb,dt);
+
 	
 	switch(i){
 		case 2:
@@ -322,7 +327,6 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 			}
 	}
 }
-
 
 
 
