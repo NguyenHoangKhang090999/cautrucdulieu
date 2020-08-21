@@ -1437,26 +1437,25 @@ void NhapChuoiHK (char *tieude, char *S) {
     while (strcmp(S,"")==0)  ;	
 }
 
-
-int NhapHK(HKPTR &tree,Hanhkhach &hk){
-	HKPTR p;
-		while(true){
-			if(tree == NULL){				
-				p = new NodeHanhkhach();
-				p->hk = hk;
-				p->pLeft = p->pRight = NULL;
-				tree = p;
-				return true;
-			}else{
-				if(strcmp (hk.Cmnd,tree->hk.Cmnd)==-1){
-					tree = tree->pLeft;
-				}else if(strcmp (hk.Cmnd,tree->hk.Cmnd)==1){
-					tree = tree->pRight;
-				}							
-			}			
-		}	
+ 
+HKPTR InsertHK(HKPTR &tree,Hanhkhach &hk)
+{
+    if ( tree == NULL ){   
+        HKPTR p;
+        p = new NodeHanhkhach();
+        p->pLeft = p->pRight = NULL;
+        p->hk = hk;
+        tree = p;
+        return tree;
+        
+    }
+	if(strcmp (hk.Cmnd,tree->hk.Cmnd)==-1){
+		InsertHK(tree->pLeft,hk);
+	}else if(strcmp (hk.Cmnd,tree->hk.Cmnd)==1){
+		InsertHK(tree->pRight,hk);
+	}			
+    return tree;
 }
-
 
 
 int  NhapDSHK(HKPTR &tree){
@@ -1465,41 +1464,37 @@ int  NhapDSHK(HKPTR &tree){
 		cout<<"Nhap so cmnd: ";
 		cin>> hk.Cmnd;
 		if(SearchHK(tree,hk.Cmnd)!=NULL){
-			cout<<"so cmnd da ton tai";
+			cout<<"so cmnd da ton tai"<<endl;
 			continue;
 		}
 		NhapChuoiHK("Nhap ho hanh khach: ",hk.Ho);
 		NhapChuoiHK("Nhap ten hanh khach: ",hk.Ten);
-		NhapChuoiHK("Nhap gioi tinh: ",hk.Gioitinh);
+		NhapChuoiHK("Nhap gioi tinh(nam/nu): ",hk.Gioitinh);
 		
-		
-		NhapHK(tree,hk);
+		InsertHK(tree,hk);
 			
 		return 1;
 	}
 }
 
-void SaveHK(ofstream &fileout,Hanhkhach hk){
-	
-	fileout<<hk.Cmnd<<",";
-	fileout<<hk.Ho<<",";
-	fileout<<hk.Ten<<",";
-	fileout<<hk.Gioitinh<<",";
-	
+
+void SaveHK(ofstream &fileout,HKPTR tree){
+	if(tree != NULL){
+		fileout<<tree->hk.Cmnd<<",";
+		fileout<<tree->hk.Ho<<",";
+		fileout<<tree->hk.Ten<<",";
+		fileout<<tree->hk.Gioitinh<<",";
+		SaveHK(fileout,tree->pLeft);
+		SaveHK(fileout,tree->pRight);
+	}
+
 }
 
-void SaveDSHK(HKPTR p){
+void SaveDSHK(HKPTR tree){
 	ofstream fileout;
-	fileout.open("dshanhkhach.txt",ios::out);
-	
-//	while(p!=NULL){
-		SaveHK(fileout,p->hk);
-//		p = p->pLeft;
-//		p = p->pRight;
-//	}
-	
+	fileout.open("dshanhkhach.txt",ios_base::out);
+	SaveHK(fileout,tree);
 	fileout.close();
-	cout<<" thanh cong";
 	return;
 }
 
@@ -1523,21 +1518,17 @@ void LoadHK(ifstream &filein,Hanhkhach &hk){
 		string gt;
 		getline(filein,gt,',');
 		strcpy(hk.Gioitinh,gt.c_str());
-		
-//		string tam;
-//		getline(filein,tam);
-	
 }
 
 void LoadDSHK(HKPTR &tree){
 	ifstream filein;
 	Hanhkhach hk;
 	filein.open("dshanhkhach.txt",ios::in);
-//	while(!filein.eof()){		
+	while(!filein.eof()){		
 		LoadHK(filein,hk);
-		NhapHK(tree,hk);
-//	}
-	filein.close();;
+		InsertHK(tree,hk);
+	}
+	filein.close();
 	return;
 }
 
@@ -1582,10 +1573,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 	}else{
 		rp = p;
 		if(rp->pRight == NULL){
-		// p là nút lá hoac la nut chi co cay con ben trai
+		// p la nut la hoac la nut chi co cay con ben trai
 			p = rp->pLeft;
 		}else if(rp->pLeft == NULL){
-		// p là nut co cay con ben phai
+		// p la nut co cay con ben phai
 			p = rp->pRight;
 		}else{
 			Xoanode2con(rp->pRight);			
@@ -1917,8 +1908,6 @@ void Datve(CBPTR &First,HKPTR &tree,Listmaybay dsmb){
 					}else{
 						system("cls");
 						NhapDSHK(tree);
-//						int nhaphk = NhapDSHK(tree);
-//						if(nhaphk != 1) return;
 						goto Loop1;
 					}	
 				}
