@@ -48,13 +48,26 @@ int wherey( void )
     return screen_buffer_info.dwCursorPosition.Y;
 }
 
+int sosanh(char *s1,char *s2){
+	int n = 0;
+   short flag = 1;
+   
+   while (s1[n] != '\0') {
+      if(s1[n] != s2[n]) {
+         flag = 0;
+         break;
+      }
+      n++;
+   }
+   return flag;
+}
 
 
 /////////////// May bay ////////////////////
 
 int SearchMB(Listmaybay &dsmb,char *name){
 	for(int i=0;i<dsmb.n;i++){
-		if(stricmp(dsmb.nodes[i]->sohieu,name)==0) return i;
+		if(sosanh(dsmb.nodes[i]->sohieu,name)==1) return i;
 	}
 	return -1;
 }
@@ -456,7 +469,7 @@ int CheckAvailable(char *sh,CBPTR First){
 		if(strcmp(p->cb.sohieumb,sh)==0)
 		{
 			if(p->cb.trangthai == 1 || p->cb.trangthai == 2 ){	 
-				 i = 1;
+				i = 1;
 				return i;
 			}
 			else if(p->cb.trangthai == 3 && p->cb.trangthai == 1){
@@ -769,155 +782,25 @@ void NhapNgay(Date &dt,char *kt){
 			int gio = p->cb.date.gio;
 			int phut = p->cb.date.phut;	
 		
-		
-		
 		if(dt.nam == nam){
-		if(dt.thang == thang){
-			if(dt.ngay == ngay){
-				if((dt.gio - gio) >=3 && dt.phut >= phut){
-					K=1;
-				}	
-				
-				}else if( dt.ngay > ngay){
-					
-					if(gio < 21){
-							K=1;
-					}
-					else if(gio == 21)
-						checkgio=0;
-					else if(gio == 22)
-						checkgio=1;
-					else if(gio == 23)
-						checkgio=2;
-				
+			if(dt.thang == thang){
+				if(dt.ngay == ngay){
+					if((dt.gio - gio) >=3 && dt.phut >= phut){
 						
-						
-						if(dt.gio >= checkgio &&  dt.phut >= checkphut){
-							K=1;
-						
-						}		
-						
-					}
-			}else if((dt.thang - thang) == 1 && dt.ngay == 1){
-			
-				if(thang == 1 || thang == 3 || thang == 5 || thang == 7 || thang == 8 || thang == 10 || thang == 12)
-				{
-					if(ngay == 31){
-					
-						if(gio < 21){
-							K=1;
-					}
-					else if(gio == 21)
-						checkgio=0;
-					else if(gio == 22)
-						checkgio=1;
-					else if(gio == 23)
-						checkgio=2;
-						
-						
-						if(dt.gio >= checkgio &&  dt.phut >= checkphut){
-							K=1;
-						
-						}		
-					}else 
 						K=1;
-					
-			
-			}else if(thang == 4 || thang == 6 || thang == 9 || thang == 11 ){
-				if(ngay == 30){
-						if(gio < 21){
-							K=1;
+						}else
+						cout<<"Khong the tao chuyen bay nay!!!"<<endl;
+						system("pause");
 					}
-					else if(gio == 21)
-						checkgio=0;
-					else if(gio == 22)
-						checkgio=1;
-					else if(gio == 23)
-						checkgio=2;
-						
-						if(dt.gio >= checkgio &&  dt.phut >= checkphut){
-							K=1;
-						
-						}		
-					}else 
-						K=1;
-					
-				}else if(thang == 2){
-					if(dt.nam % 4 == 0 && dt.nam % 100 != 0 || dt.nam % 400 ==0){
-						if(ngay == 29){
-							
-							if(gio < 21){
-							K=1;
 					}
-					else if(gio == 21)
-						checkgio=0;
-					else if(gio == 22)
-						checkgio=1;
-					else if(gio == 23)
-						checkgio=2;
-						
-						
-						if(dt.gio >= checkgio &&  dt.phut >= checkphut){
-							K=1;
-						
-						}		
-					}else 
-						K=1;
-					}else 
-						if(ngay == 28){
-							
-							if(gio < 21){
-							K=1;
 					}
-					else if(gio == 21)
-						checkgio=0;
-					else if(gio == 22)
-						checkgio=1;
-					else if(gio == 23)
-						checkgio=2;
-						
-						
-						if(dt.gio >= checkgio &&  dt.phut >= checkphut){
-							K=1;
-						
-						}		
-					}else 
-						K=1;
-				}
-			}else if((dt.thang - thang) > 1)
-				K=1;
-			
-	}else if(dt.nam > nam){
-		if(dt.thang == 1 && thang == 12){
-		if(ngay == 31){
-				if(gio < 21){
-							K=1;
-					}
-					else if(gio == 21)
-						checkgio=0;
-					else if(gio == 22)
-						checkgio=1;
-					else if(gio == 23)
-						checkgio=2;
-						
-						
-						if(dt.gio >= checkgio &&  dt.phut >=checkphut){
-							K=1;
-						
-						}
-		}else 	
-			K=1;
+	}
 		
-	}else 
-		K=1;
-}
-}
-}
-	if(K == 0)
-		goto Loop;
 
-	
-	
+	if(K!=1)
+		goto Loop;
+	else{
+
 		int y = 1900 + thoigian->tm_year;
 		int m = 1 + thoigian->tm_mon;
 		int d = thoigian->tm_mday;
@@ -981,7 +864,10 @@ void NhapNgay(Date &dt,char *kt){
 		cout<<"Ngay thang khong hop le!!!"<<endl;
 		goto Loop;
 		
+}
+		
 
+}
 }
 
 
@@ -990,22 +876,24 @@ void UpdateTrangThaiCB(CBPTR &First){
 	
 
 	CBPTR p;
+	// lay so lieu thoi gian thuc
 //	 int y = 1900 + thoigian->tm_year;
 //	int m = 1 + thoigian->tm_mon;
 //	int d = thoigian->tm_mday;
+//  int h = thoigian->tm_hour;
+// 	int min = thoigian->tm_minute;
+
+//thoi gian thuc gia dinh de test chuong trinh
 	int h = 4;
-	int min = 30;
+	int min = 0;
 	int y = 2021;
 	int m = 3;
-	int d = 1;
+	int d = 10;
 	
 	
 	for(p=First; p!= NULL; p=p->next){
 		int checkgio;
 		int checkphut=p->cb.date.phut;
-		
-
-
 
 // thoi gian hoan tat chuyen bay la 5 gio ke tu thoi diem khoi hanh
 	if(y == p->cb.date.nam){
@@ -1017,7 +905,6 @@ void UpdateTrangThaiCB(CBPTR &First){
 				}	
 				
 				}else if( d > p->cb.date.ngay){
-					
 					if(p->cb.date.gio < 19){
 							p->cb.trangthai == 3;
 					}
@@ -1033,11 +920,12 @@ void UpdateTrangThaiCB(CBPTR &First){
 						checkgio=4;
 						
 						
-						if(h >= checkgio &&  min >= checkphut){
-							p->cb.trangthai =3;
-						
-						}		
-						
+						if(h == checkgio && min >= checkphut){
+								p->cb.trangthai = 3;
+							}else if(h > checkgio){
+								p->cb.trangthai = 3;
+						}
+								
 					}
 			}else if((m - p->cb.date.thang) == 1 && d == 1){
 			
@@ -1061,10 +949,11 @@ void UpdateTrangThaiCB(CBPTR &First){
 						checkgio=4;
 						
 						
-						if(h >= checkgio &&  min >= checkphut){
-							p->cb.trangthai =3;
-						
-						}		
+						if(h == checkgio && min >= checkphut){
+								p->cb.trangthai = 3;
+							}else if(h > checkgio){
+								p->cb.trangthai = 3;
+						}
 					}else 
 						p->cb.trangthai = 3;
 					
@@ -1086,11 +975,11 @@ void UpdateTrangThaiCB(CBPTR &First){
 					else if(p->cb.date.gio == 23)
 						checkgio=4;
 						
-						
-						if(h >= checkgio &&  min >= checkphut){
-							p->cb.trangthai =3;
-						
-						}		
+							if(h == checkgio && min >= checkphut){
+								p->cb.trangthai = 3;
+							}else if(h > checkgio){
+								p->cb.trangthai = 3;
+						}	
 					}else 
 						p->cb.trangthai = 3;
 					
@@ -1114,10 +1003,11 @@ void UpdateTrangThaiCB(CBPTR &First){
 						checkgio=4;
 						
 						
-						if(h >= checkgio &&  min >= checkphut){
-							p->cb.trangthai =3;
-						
-						}		
+							if(h == checkgio && min >= checkphut){
+								p->cb.trangthai = 3;
+							}else if(h > checkgio){
+								p->cb.trangthai = 3;
+						}	
 					}else 
 						p->cb.trangthai = 3;
 					}else 
@@ -1139,10 +1029,11 @@ void UpdateTrangThaiCB(CBPTR &First){
 						checkgio=4;
 						
 						
-						if(h >= checkgio &&  min >= checkphut){
-							p->cb.trangthai =3;
-						
-						}		
+							if(h == checkgio && min >= checkphut){
+								p->cb.trangthai = 3;
+							}else if(h > checkgio){
+								p->cb.trangthai = 3;
+						}	
 					}else 
 						p->cb.trangthai = 3;
 				}
@@ -1169,9 +1060,10 @@ void UpdateTrangThaiCB(CBPTR &First){
 						checkgio=4;
 						
 						
-						if(h >= checkgio &&  min >=checkphut){
-							p->cb.trangthai =3;
-						
+							if(h == checkgio && min >= checkphut){
+								p->cb.trangthai = 3;
+							}else if(h > checkgio){
+								p->cb.trangthai = 3;
 						}
 		}else 	
 			p->cb.trangthai = 3;
@@ -1227,7 +1119,7 @@ void Lietkechongoi(Chuyenbay cb){
 	system("pause");
 }
 
-//
+
 
 
 int NhapDSCB(CBPTR &First,Listmaybay dsmb){
@@ -1235,6 +1127,7 @@ int NhapDSCB(CBPTR &First,Listmaybay dsmb){
 	Chuyenbay cb;
 	int n;
 	int k;
+
 	  do{
 	  	if(dsmb.n == 0){
 	  		cout<<"Danh sach may bay rong khong the tao chuyen bay!!!"<<endl;
@@ -1246,10 +1139,12 @@ int NhapDSCB(CBPTR &First,Listmaybay dsmb){
 	  if(n == 0)
 	  	return 1;
 	   }while(n<=0);
+	   
 		for(int i=1 ;i<=n;i++){
 			cout<<"Thong tin chuyen bay "<<i<<" "<<endl;
 				Loop:
-				
+				system("cls");
+				cout<<"                                              NHAP THONG TIN CHUYEN BAY                                      "<<endl;
 				NhapChuoiCB("Nhap ma chuyen bay: ",cb.ID);
 				if(strcmp(cb.ID,"0")==0) continue;
 				if(SearchCBID(First,cb.ID)!=NULL){
@@ -1257,19 +1152,170 @@ int NhapDSCB(CBPTR &First,Listmaybay dsmb){
 					goto Loop;
 				}
 				fflush (stdin);
-				cout<<"Nhap dia diem den: "; gets(cb.diadiem);
+				
+				cout<<"Nhap dia diem den: "; 
+				gets(cb.diadiem);
 				cb.trangthai =1;
-					
+				NhapDate(cb.date);
+				
 				for(CBPTR p=First;p!=NULL;p=p->next){
-					if(strcmp(cb.diadiem,p->cb.diadiem)==0 && p->cb.trangthai == 1 || strcmp(cb.diadiem,p->cb.diadiem)==0 && p->cb.trangthai == 2){
+					int h;
+					int min = p->cb.date.phut;
+			
+					if(strcmp(cb.diadiem,p->cb.diadiem) == 0 && p->cb.trangthai == 1){
 					cout<<"---------------------------------------------------------------------------------------------------------------"<<endl;
 					cout<<"Dang co chuyen bay den "<<p->cb.diadiem<<" vao luc "<<p->cb.date.gio<<":"<<p->cb.date.phut<<"  "<<p->cb.date.ngay<<"/"<<p->cb.date.thang<<"/"<<p->cb.date.nam<<". "<<"So hieu may bay la: "<<p->cb.sohieumb<<endl;;	
 					cout<<"---------------------------------------------------------------------------------------------------------------"<<endl;
-					cout<<"Chi duoc set chuyen bay den day sau 3 tieng ke tu thoi diem khoi hanh tren!!!"<<endl;	
+					cout<<"Chi duoc set chuyen bay den day sau 3 tieng ke tu thoi diem khoi hanh tren!!!"<<endl;
 					system("pause");
-				}
-				}
+						
+					if(cb.date.nam == p->cb.date.nam){
+						if(cb.date.thang == p->cb.date.thang){
+							if(cb.date.ngay == p->cb.date.ngay){
+									if((cb.date.gio - p->cb.date.gio) == 3 && cb.date.phut >= p->cb.date.phut){
+										goto Loop1;
+								}else if((cb.date.gio - p->cb.date.gio) > 3){
+									goto Loop1;
+								}else 
+									goto Loop;	
+							}else if(cb.date.ngay > p->cb.date.ngay){
+								if(p->cb.date.gio < 21){
+									goto Loop1;
+								}else if(p->cb.date.gio == 21){
+									h = 0;
+								}else if(p->cb.date.gio == 22){
+									h = 1;
+								}else if(p->cb.date.gio == 23){
+									h = 2;
+								}
+								
+								if((cb.date.gio - h) == 3 && cb.date.phut >= min ){
+									goto Loop1;
+								}else if((cb.date.gio - h) > 3){
+									goto Loop1;
+								}else 
+									goto Loop;
+							}else
+								goto Loop;
+			}else if((cb.date.thang - p->cb.date.thang) == 1 && cb.date.ngay == 1){
+				if(p->cb.date.thang == 1 || p->cb.date.thang == 3 || p->cb.date.thang == 5 || p->cb.date.thang == 7 || p->cb.date.thang == 8 || p->cb.date.thang == 10 || p->cb.date.thang == 12)
+				{
+					if(p->cb.date.ngay == 31){
+						if(p->cb.date.gio < 21){
+							goto Loop1;
+					}else if(p->cb.date.gio == 21)
+						h=0;
+					else if(p->cb.date.gio == 22)
+						h=1;
+					else if(p->cb.date.gio == 23)
+						h=2;
+						
+				if((cb.date.gio - h) == 3 && cb.date.phut >= min ){
+						goto Loop1;
+				}else if((cb.date.gio - h) > 3){
+					goto Loop1;
+				}else 
+					goto Loop;
+				}else
+					goto Loop1;
+					
+			
+			}else if(p->cb.date.thang == 4 || p->cb.date.thang == 6 || p->cb.date.thang == 9 || p->cb.date.thang == 11 ){
+				if(p->cb.date.ngay == 30){
+						if(p->cb.date.gio < 21){
+							goto Loop1;
+					}else if(p->cb.date.gio == 21)
+						h=0;
+					else if(p->cb.date.gio == 22)
+						h=1;
+					else if(p->cb.date.gio == 23)
+						h=2;
+						
+				if((cb.date.gio - h) == 3 && cb.date.phut >= min ){
+						goto Loop1;
+				}else if((cb.date.gio - h) > 3){
+					goto Loop1;
+				}else 
+					goto Loop;
+				}else 
+					goto Loop1;
+
+				}else if(p->cb.date.thang == 2){
+					if(p->cb.date.nam % 4 == 0 && p->cb.date.nam % 100 != 0 || p->cb.date.nam % 400 ==0){//nam nhuan
+						if(p->cb.date.ngay == 29){
+						if(p->cb.date.gio < 21){
+							goto Loop1;
+					}else if(p->cb.date.gio == 21)
+						h=0;
+					else if(p->cb.date.gio == 22)
+						h=1;
+					else if(p->cb.date.gio == 23)
+						h=2;
+						
+					if((cb.date.gio - h) == 3 && cb.date.phut >= min ){
+						goto Loop1;
+				}else if((cb.date.gio - h) > 3){
+					goto Loop1;
+				}else 
+					goto Loop;
+				}else
+					goto Loop1;
+						
+			}else 
+				if(p->cb.date.ngay == 28){
+					if(p->cb.date.gio < 21){
+						goto Loop1;
+						
+					}else if(p->cb.date.gio == 21)
+						h=0;
+					else if(p->cb.date.gio == 22)
+						h=1;
+					else if(p->cb.date.gio == 23)
+						h=2;
 				
+						if((cb.date.gio - h)==3 && cb.date.phut >= min){
+							goto Loop1;
+						}else if((cb.date.gio - h) > 3){
+							goto Loop1;
+						}else 
+							goto Loop;		
+					}else 
+						goto Loop1;
+				}
+			}else if(cb.date.thang < p->cb.date.thang)
+				goto Loop;
+			else if((cb.date.thang - p->cb.date.thang) > 1)
+				goto Loop1;
+		}else if(cb.date.nam > p->cb.date.nam){
+			if(cb.date.thang == 1 && p->cb.date.thang == 12){
+				if(p->cb.date.ngay == 31){
+				if(p->cb.date.gio < 21){
+						goto Loop1;
+					}else if(p->cb.date.gio == 21)
+						h=0;
+					else if(p->cb.date.gio == 22)
+						h=1;
+					else if(p->cb.date.gio == 23)
+						h=2;
+				
+					if((cb.date.gio - h) == 3 && cb.date.phut >= min){
+							goto Loop1;
+						}else if((cb.date.gio - h) > 3){
+							goto Loop1;
+						}else if((cb.date.gio - h) < 3)
+							goto Loop;
+							
+		}else 	
+			goto Loop1;
+		
+	}else 
+		goto Loop1;
+	
+}
+
+}
+				
+
 				// ktra so hieu mb co ton tai
 				Loop1:
 				cout<<"So hieu cac may bay co trong csdl:"<<endl;
@@ -1295,7 +1341,7 @@ int NhapDSCB(CBPTR &First,Listmaybay dsmb){
 		   	    cb.danhsachve.sldb = 0;	
 				NhapDSVE(dsmb.nodes[kt]->soday,dsmb.nodes[kt]->sodong,cb);						
 				
-				NhapDate(cb.date);
+				
 																	
 				p = new Nodechuyenbay;	
 				p->cb = cb;
@@ -1309,6 +1355,8 @@ int NhapDSCB(CBPTR &First,Listmaybay dsmb){
 		}	
 }
 }
+}
+
 
 
 
@@ -1559,6 +1607,7 @@ int HieuungthongtinCBHoatDong(CBPTR First){
 			return i;
 
 }
+
 
 int Hieuungyesno(string yeucau){
 	char ch;
@@ -2037,7 +2086,7 @@ int Thongkeluotchuyenbay(CBPTR First,Listmaybay dsmb){
 	while(true){
 		
 		if(dsmb.n == NULL){
-		cout<<"CHUA C” MAY BAY TRONG HE THONG!!!"<<endl;
+		cout<<"CHUA C√ì MAY BAY TRONG HE THONG!!!"<<endl;
 		system("pause");
 		return true;		
 		}
@@ -2291,10 +2340,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 //		}else{
 //			rp = p;
 //			if(rp->pRight == NULL){
-//			// p l‡ n˙t l· hoac la nut chi co cay con ben trai
+//			// p l√† n√∫t l√° hoac la nut chi co cay con ben trai
 //				p = rp->pLeft;
 //			}else if(rp->pLeft == NULL){
-//			// p l‡ nut co cay con ben phai
+//			// p l√† nut co cay con ben phai
 //				p = rp->pRight;
 //			}else{
 //				Xoanode2con(rp->pRight);			
@@ -2554,7 +2603,7 @@ int Chonchongoi(Chuyenbay cb,Listmaybay dsmb,string tieude){
 
 
 int Searchchongoi(CBPTR p,char *vitringoi){
-		//p l‡ vi tri cua chuyen bay can dat
+		//p l√† vi tri cua chuyen bay can dat
 	for(int i=0;i<p->cb.danhsachve.n;i++){
 		if(p->cb.danhsachve.vecb[i].chongoi.compare(vitringoi)==0 ){
 //		if(strcmp(p->cb.danhsachve.vecb[i].chongoi,vitringoi)==0 ){
