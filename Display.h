@@ -6,7 +6,7 @@
 using namespace std;
 
 
-void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree,Chuyenbay &cb,Date &dt);
+void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree);
 int MenuMB(Listmaybay &dsmb,CBPTR &dscb);
 int MenuCB(Listmaybay &dsmb,CBPTR &dscb);
 
@@ -215,7 +215,7 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 
 
 
-void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree,Chuyenbay &cb,Date &dt){
+void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	
 	system("cls");
 	char MenuChinh[][1000] = { "\t\|-------------------------------|AIR-BUS-MANAGEMENT|-----------------------------|ESC-thoat| ",
@@ -266,7 +266,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree,Chuyenbay &cb,Date &dt){
 	
 	LoadMB(dsmb,"dsmaybay");
 	LoadDSCB(dscb);
-	UpdateTrangThaiCB(cb,dt);
+	UpdateTrangThaiCB(dscb);
 
 	
 	switch(i){
@@ -327,6 +327,32 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree,Chuyenbay &cb,Date &dt){
 			}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
