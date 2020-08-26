@@ -168,6 +168,8 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 	
 	LoadMB(dsmb,"dsmaybay");
 //	LoadDSCB(dscb);
+	UpdateTrangThaiCB(dscb);
+	SapXepCBTheoID(dscb);
 	switch(i){
 		case 2:
 			{
@@ -218,7 +220,7 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	
 	system("cls");
-	char MenuChinh[][1000] = { "\t\|-------------------------------|AIR-BUS-MANAGEMENT|-----------------------------|ESC-thoat| ",
+	char MenuChinh[][1000] = {"\t\|-----------------------------------|VIETJET-AIR|--------------------------------|ESC-thoat| ",
 						"\t\|\t\t\t\        Quan ly may bay                                            |",
 						"\t\|\t\t\t\        Quan ly chuyen bay                                         |",
 						"\t\|\t\t\t\        Dat ve                                                     |",
@@ -228,6 +230,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 						"\t\|\t\t\t\        Danh sach ve trong - chuyen bay                            |",
 						"\t\|\t\t\t\        Thong ke luot thuc hien chuyen bay                         |",
 						"\t\|------------------------------------------------------------------------------------------|",
+						
 	
 	 				};
 	
@@ -236,7 +239,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	do{
 		system("cls");
 		
-		for(int t=1;t<=10;t++){
+		for(int t=1;t<=11;t++){
 			if (t==i){ 
 //				gotoxy(40,t-1);
 				//Khungdatve();
@@ -253,7 +256,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	        } while (!(ch==224||ch==13||ch==27||ch==80||ch==72));
 		if(ch==80){         //ky tu xuong
 	        i++; 
-	        if (i>9) i = 2; //het dong k quay lai dong 2
+	        if (i>10) i = 2; //het dong k quay lai dong 2
 	    }
 	   	if (ch==72){          //ky tu len
 	        i--; 
@@ -266,7 +269,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	
 	LoadMB(dsmb,"dsmaybay");
 	LoadDSCB(dscb);
-	UpdateTrangThaiCB(dscb);
+	
 
 	
 	switch(i){
@@ -327,6 +330,29 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 			}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
