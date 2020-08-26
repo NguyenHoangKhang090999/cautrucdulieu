@@ -62,20 +62,7 @@ int sosanh(char *s1,char *s2){
    return flag;
 }
 
-char* DoiThanhInHoa(char s[])
 
-{
- int i;
- for(i=0;i<strlen(s);i++)
-{
-if(s[i]>='a' && s[i]<='z')
- {
-   s[i]=s[i]-32;
- }          
- }
-	return s;
-
-}
 
 /////////////// May bay ////////////////////
 
@@ -1126,17 +1113,61 @@ bool checkdiadiem(CBPTR First,Chuyenbay cb){
 		return true;
 	
 			}
-		}
-		}
+		}else
+			return true;
+	}
 	}
 	
+char* DoiThanhInHoa(char s[])
 
+{
+ int i;
+ for(i=0;i<strlen(s);i++)
+{
+if(s[i]>='a' && s[i]<='z')
+ {
+   s[i]=s[i]-32;
+ }          
+ }
+	return s;
 
+}
 
+char* DoiThanhChuThuong(char s[]){
+	int i;
+ for(i=0;i<strlen(s);i++)
+{
+if(s[i]>='a' && s[i]<='z')
+ {
+   s[i]=s[i]+32;
+ }          
+ }
+	return s;	
+}
 
-char* TaoMaCB(int h,int min,int d,int m,int y){
+void xoakt(char s[90],int i)
+{
+     for(int j=i;j<strlen(s);j++)
+     s[j]=s[j+1];
+}
 
-	int a = m*100000000 + d*1000000 + y*10000 + h*100 +min;
+char* catchuoi(char s[]){
+
+  char str[5];	
+  int i;
+  for (i = 0; i < 4; i++){
+    if (s[i] == ' ')
+      i++;
+ 	else
+ 		str[i] = s[i];
+ 
+}
+  return str;
+}
+
+char* TaoMaCB(int h,int min,int d,int m,int y,char s[]){
+
+	int a = y*1000000 + m*10000 + d*100 + h;
 string st = chuyenintsangstring(a);
 char *temp = new char(st.size()+1);
 
@@ -1144,7 +1175,11 @@ char *temp = new char(st.size()+1);
       temp[i]=st[i];
       
       
-    return temp;
+    char b[12];
+    strcpy(b,s);
+	strcat(b,temp); 
+	
+    return b;
 }
 
 int NhapDSCB(CBPTR &First,Listmaybay dsmb){
@@ -1173,36 +1208,48 @@ int NhapDSCB(CBPTR &First,Listmaybay dsmb){
 				Loop:
 				system("cls");
 				cout<<"                                              NHAP THONG TIN CHUYEN BAY                                      "<<endl;
-//				NhapChuoiCB("Nhap ma chuyen bay: ",cb.ID);
-				
-//				cout<<"Chuyen bay: "<<cb.ID<<endl;
-//				if(strcmp(cb.ID,"0")==0) continue;
-//				if(SearchCBID(First,cb.ID)!=NULL){
-//					cout<<"Ma chuyen bay bi trung!!!, Nhap lai "<<endl;
-//					goto Loop;
-//				}
+
 				
 				fflush (stdin);
 				cout<<"Nhap dia diem den: "; 
 				gets(trans);
+				if(strcmp(trans," ")==0 || strcmp(trans,"")==0){
+					cout<<"chua nhap dia diem!!!"<<endl;
+					system("pause");
+					goto Loop;
+				}
+				
 				strcpy(cb.diadiem,DoiThanhInHoa(trans));
 				
 					cb.trangthai =1;
 					NhapDate(cb.date);
+					
 					int h = cb.date.gio;
 					int min = cb.date.phut;
 					int d = cb.date.ngay;
 					int m = cb.date.thang;
 					int y = cb.date.nam % 100;
-					strcpy(cb.ID,TaoMaCB(h,min,d,m,y));
+					char str1[12];
+					char str2[12];
+					strcpy(str1,cb.diadiem);
 					
-					bool check;
+					for(int i=0;i<strlen(str1);i++)
+ 						  if(str1[i]==' ')
+  					  {
+              				 xoakt(str1,i);
+              				 i--;
+ 					   }
+ 					   
+ 					strcpy(str2,catchuoi(str1));
+					strcpy(cb.ID,TaoMaCB(h,min,d,m,y,str2));
+					
+					bool check = true;
 					check = checkdiadiem(First,cb);	
 					
 				// Kiem tra dieu kiên thoa ve thoi gian va dia diem
-				if(check==true){
+				if(check== true){
 					goto Loop1;
-				}else if(check == false)
+				}else
 					goto Loop;
 
 			//tra so hieu mb co ton tai
@@ -1289,24 +1336,25 @@ void LietkeDSCB(CBPTR First){
 		if(First == NULL){
 			cout<<"		                    CHUA CO CHUYEN BAY TRONG DANH SACH       ESC : thoat"<<endl;
 		}else{
-			int dem =0 ;
-			cout<<"                                                DANH SACH CHUYEN BAY 			ESC : thoat"<<endl;
+			int dem =1 ;
+			cout<<"                                         ***** DANH SACH CHUYEN BAY ***** 			ESC : thoat"<<endl;
+			cout<<"------------------------------------------------------------------------------------------------------------------------"<<endl;
 			
-			cout<<"STT   MA CB      Dia diem      So hieu may bay     Trang thai      SL Ve      SL Ve ban   Ngay/Thang/Nam    Gio/phut   "<<endl;
+			cout<<"STT   MA CB        Dia diem          So hieu May Bay      Status    SL Ve      SL Ve ban   Ngay/Thang/Nam    Gio/phut   "<<endl;
 			for(CBPTR p = First; p!=NULL;p=p->next){
 				dem++;
 				cout<<" "<<dem;
-				gotoxy(6,dem+1);
+				gotoxy(4,dem+1);
 				cout<<p->cb.ID;
 				gotoxy(19,dem+1);
 				cout<<p->cb.diadiem;
-				gotoxy(36,dem+1);
+				gotoxy(40,dem+1);
 				cout<<p->cb.sohieumb;
-				gotoxy(55,dem+1);
+				gotoxy(60,dem+1);
 				cout<<p->cb.trangthai;
-				gotoxy(68,dem+1);
+				gotoxy(70,dem+1);
 				cout<<p->cb.danhsachve.n;
-				gotoxy(82,dem+1);
+				gotoxy(83,dem+1);
 				cout<<p->cb.danhsachve.sldb;
 				gotoxy(93,dem+1);	
 				cout<<p->cb.date.ngay<<"/" ;
@@ -2639,4 +2687,3 @@ void HuyVE(CBPTR First,HKPTR tree){
 		k++;
 	}	
 }
-
