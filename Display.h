@@ -73,27 +73,23 @@ int MenuMB(Listmaybay &dsmb,CBPTR &dscb){
 	    }
 	   	if (ch==72){          //ky tu len
 	        i--; 
-	        if (i<2) i = 6; 
+	        if (i<2) i = 5; 
 	    }
 	    if(ch==27){
 	    	return 2;
 		}
 	}while (!(ch == 13));
 	
-	LoadMB(dsmb,"dsmaybay");
-//	LoadCB(dscb,"dschuyenbay");
 	switch(i){
 		case 2:
 			{
 				system("cls");
-//				LoadMB(dsmb,"dsmaybay");
 				LietkeDSMB(dsmb);
 				break;
 			}
 		case 3:
 			{
 				system("cls");
-//				LoadMB(dsmb,"dsmaybay");
 				NhapDSMB(dsmb);
 				SapxepMB(dsmb);
 				SaveMB(dsmb,"dsmaybay");
@@ -159,17 +155,13 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 	    }
 	   	if (ch==72){          //ky tu len
 	        i--; 
-	        if (i<2) i = 7; 
+	        if (i<2) i = 6; 
 	    }
 	    if(ch==27){
 	    	return 2;
 		}
 	}while (!(ch == 13 ));
 	
-	LoadMB(dsmb,"dsmaybay");
-//	LoadDSCB(dscb);
-	UpdateTrangThaiCB(dscb);
-	SapXepCBTheoID(dscb);
 	switch(i){
 		case 2:
 			{
@@ -229,9 +221,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 						"\t\|\t\t\t\        Danh sach chuyen bay theo yeu cau                          |",
 						"\t\|\t\t\t\        Danh sach ve trong - chuyen bay                            |",
 						"\t\|\t\t\t\        Thong ke luot thuc hien chuyen bay                         |",
-						"\t\|------------------------------------------------------------------------------------------|",
-						
-	
+						"\t\|------------------------------------------------------------------------------------------|"
 	 				};
 	
 	char ch;
@@ -239,7 +229,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	do{
 		system("cls");
 		
-		for(int t=1;t<=11;t++){
+		for(int t=1;t<=10;t++){
 			if (t==i){ 
 //				gotoxy(40,t-1);
 				//Khungdatve();
@@ -256,21 +246,20 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	        } while (!(ch==224||ch==13||ch==27||ch==80||ch==72));
 		if(ch==80){         //ky tu xuong
 	        i++; 
-	        if (i>10) i = 2; //het dong k quay lai dong 2
+	        if (i>9) i = 2; //het dong k quay lai dong 2
 	    }
 	   	if (ch==72){          //ky tu len
 	        i--; 
 	        if (i<2) i = 9; 
 	    }
-	    if(ch == 27){
+	    if(ch == 27){ // esc
 				exit(0);
 		}
 	}while (!(ch == 13));
 	
-	LoadMB(dsmb,"dsmaybay");
+	LoadMB(dsmb);
 	LoadDSCB(dscb);
-	
-
+	LoadDSHK(tree);
 	
 	switch(i){
 		case 2:
@@ -298,6 +287,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 			{
 				system("cls");
 				HuyVE(dscb,tree);
+				SaveDSCB(dscb);
 				break;
 			}
 		case 6:
@@ -330,79 +320,4 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 			}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
