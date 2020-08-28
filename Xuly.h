@@ -441,7 +441,7 @@ void NhapChuoiCB (char *tieude, char *S) {
 }
 
 void ThemcuoiCB (CBPTR &First , Chuyenbay cb) {
-	    CBPTR p = new Nodechuyenbay ;
+	    CBPTR p = new Nodechuyenbay;
 		p->cb = cb ; p->next=NULL;
 		if (First==NULL){ 
 			First = p;
