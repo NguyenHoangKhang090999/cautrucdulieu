@@ -112,7 +112,7 @@ int KT_So(char *s){
 
 /////////////// May bay ////////////////////
 
-int SearchMB(Listmaybay &dsmb,char *name){
+int SearchMB(Listmaybay dsmb,char *name){	
 	for(int i=0;i<dsmb.n;i++){
 		if(sosanh(dsmb.nodes[i]->sohieu,name)==1) return i;
 	}
@@ -120,10 +120,36 @@ int SearchMB(Listmaybay &dsmb,char *name){
 }
 
 void NhapChuoi (char *tieude, char *S) {
+	Loop:
 	cout << tieude ;  fflush(stdin);
     do
 	  gets(S);
-    while (strcmp(S,"")==0)  ;	
+    while (strcmp(S,"")==0)  ;
+			
+	int b = 0;
+	
+	for(int i=0;i<strlen(S);i++){
+	if((S[i] >= 97 && S[i] <= 122 ) || (S[i] >= 65 && S[i] <= 90)) 
+        b = 1;	//co chua ALPHABET
+	}
+	if(b == 0) goto Loop;		
+}
+
+void NhapChuoiCMND (char *tieude, char *S) {
+	Loop:
+	cout << tieude ;  fflush(stdin);
+    do
+	  gets(S);
+    while (strcmp(S,"")==0)  ;		
+}
+
+void Nhapso(char *tieude,int s){
+	Loop:
+	cout << tieude;
+    do
+	  cin>>s;
+    while (s != 0)  ;
+//	if(s<=0) goto Loop;
 }
 
 
@@ -132,18 +158,16 @@ int NhapMB(Listmaybay &dsmb,Maybay &mb){
 	while(1){
 		cout<<"Thong tin may bay thu "<<dsmb.n+1<<endl;
 		NhapChuoi("Nhap so hieu may bay: ",mb.sohieu);
-		if(Alphabet(mb.sohieu)==0){
-					cout<<"nhap sai!!!"<<endl;
-					return 0;
-				}
 		if(SearchMB(dsmb,mb.sohieu)>=0){
 			cout<<"so hieu may bay da ton tai !!!"<<endl;
 			continue;		
 		}
 		NhapChuoi("Nhap loai may bay: ",mb.loai);
+		Loop:
+//		Nhapso("Nhap so day may bay(<=9): ",mb.soday);
 		cout<<"Nhap so day may bay(<=9): ";
-		cin>>mb.soday;
-		if(mb.soday<=0 || mb.soday >9) return 0;
+		cin>>mb.soday;	
+		if(!( mb.soday > 0 || mb.soday <=9)) goto Loop;	
 		cout<<"Nhap so dong may bay(<=100): ";
 		cin>>mb.sodong;
 		cout<<endl;
@@ -203,14 +227,14 @@ void LietkeDSMB(Listmaybay &dsmb){
 			return;
 		}
 		cout<<"                 DANH SACH MAY BAY                     ESC : thoat"<<endl;
-		cout<<"STT     So hieu       Loai        So day        So dong "<<endl;
+		cout<<"STT     So hieu       Loai           So day        So dong "<<endl;
 		for(int i=0;i<dsmb.n;i++){
 			cout<<" "<<i+1;
-			gotoxy(10,i+2);
+			gotoxy(8,i+2);
 			cout<<dsmb.nodes[i]->sohieu;
-			gotoxy(23,i+2);
+			gotoxy(21,i+2);
 			cout<<dsmb.nodes[i]->loai;
-			gotoxy(36,i+2); 
+			gotoxy(39,i+2); 
 			cout<<dsmb.nodes[i]->soday;
 			gotoxy(51,i+2);
 			cout<<dsmb.nodes[i]->sodong <<endl;						
@@ -476,13 +500,6 @@ CBPTR SearchCBDD(CBPTR First,char *name){
 	return NULL;
 }
 
-
-void NhapChuoiCB (char *tieude, char *S) {
-	cout << tieude ;  fflush(stdin);
-    do
-	  gets(S);
-    while (strcmp(S,"")==0)  ;	
-}
 
 void ThemcuoiCB (CBPTR &First , Chuyenbay cb) {
 	    CBPTR p = new Nodechuyenbay;
@@ -1139,7 +1156,7 @@ void NhapDSCB(CBPTR &First,Listmaybay dsmb){
 					cout<<" ";
 				}
 				cout<<endl;
-				NhapChuoiCB("Nhap so hieu may bay: ",cb.sohieumb);
+				NhapChuoi("Nhap so hieu may bay: ",cb.sohieumb);
 				int kt = SearchMB(dsmb,cb.sohieumb);
 				
 				// kiem tra may bay co dang trong
@@ -1366,6 +1383,45 @@ int HieuungthongtinDatve(CBPTR First){
 				}else HieuungCB(t,1,p->cb);
 				t++;
 			}
+		}
+		do{
+	            ch = getch();
+	            if (ch==224) ch=getch();
+	        } while (!(ch==224||ch==13||ch==27||ch==80||ch==72));
+	        if(ch==80){         //ky tu xuong
+	             i=i+1; 
+	             if (i>(t-1)) i = 1; 
+	        }
+	        if (ch==72){          //ky tu len
+	            i=i-1; 
+	            if (i<1) i = t-1; 
+	   		}
+	   		if(ch == 27){
+	   			return -1;
+			 }
+	}while (!(ch == 13));
+			return i;
+
+}
+int HieuungthongtinCB_HK(CBPTR First){
+	int i=1;
+	char ch;
+
+	do{
+		system("cls");
+		HANDLE hConsoleColor;
+   		hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);		
+		SetConsoleTextAttribute(hConsoleColor, 12);
+		cout<<"                                                   DANH SACH CHUYEN BAY 			ESC : thoat"<<endl;
+		cout<<"STT   MA CB      Dia diem      So hieu may bay     Trang thai      SL Ve      SL Ve ban   Ngay/Thang/Nam    Gio/phut   "<<endl;
+
+		int t=1;
+		for(CBPTR p = First;p!=NULL ;p=p->next){
+				if(t!=i){
+					HieuungCB(t,2,p->cb);
+				}else HieuungCB(t,1,p->cb);
+				t++;
+
 		}
 		do{
 	            ch = getch();
@@ -1994,13 +2050,6 @@ HKPTR SearchHK(HKPTR &root,char *name){
 	return NULL;
 }
 
-void NhapChuoiHK (char *tieude, char *S) {
-	cout << tieude ;  fflush(stdin);
-    do
-	  gets(S);
-    while (strcmp(S,"")==0)  ;	
-}
-
 HKPTR InsertHK(HKPTR &tree,Hanhkhach &hk)
 {
     if ( tree == NULL ){   
@@ -2046,15 +2095,14 @@ int NhapHK(HKPTR &tree,Hanhkhach &hk){
 int  NhapDSHK(HKPTR &tree){
 	Hanhkhach hk;
 	while(1){
-		cout<<"Nhap so cmnd: ";
-		cin>> hk.Cmnd;
+		NhapChuoiCMND("Nhap so cmnd: ",hk.Cmnd);
 		if(SearchHK(tree,hk.Cmnd)!=NULL){
 			cout<<"so cmnd da ton tai"<<endl;
 			continue;
 		}
-		NhapChuoiHK("Nhap ho hanh khach: ",hk.Ho);
-		NhapChuoiHK("Nhap ten hanh khach: ",hk.Ten);
-		NhapChuoiHK("Nhap gioi tinh(nam/nu): ",hk.Gioitinh);
+		NhapChuoi("Nhap ho hanh khach: ",hk.Ho);
+		NhapChuoi("Nhap ten hanh khach: ",hk.Ten);
+		NhapChuoi("Nhap gioi tinh(nam/nu): ",hk.Gioitinh);
 		
 		InsertHK(tree,hk);
 		SaveDSHK(tree);	
@@ -2149,7 +2197,7 @@ void Xoanode2con(HKPTR &k){
 
 void Xoahanhkhach(HKPTR &tree,CBPTR First){
 	char cmndxoa[16];
-	NhapChuoiHK("Nhap cmnd hanh khach can xoa: ",cmndxoa);
+	NhapChuoi("Nhap cmnd hanh khach can xoa: ",cmndxoa);
 	HKPTR p = SearchHK(tree,cmndxoa);
 	
 	if(p == NULL){ 
@@ -2246,7 +2294,7 @@ void LietkeDSHKCB_Macb(CBPTR First,HKPTR tree){
 	HKPTR q;	
 	Loop:
 	system("cls");
-	NhapChuoiCB("Nhap ma chuyen bay: ",Macb);
+	NhapChuoi("Nhap ma chuyen bay: ",Macb);
 	CBPTR IDCB = SearchCBID(First,Macb);
 	if( IDCB == NULL || IDCB->cb.trangthai == 0 ){
 		cout<<"Ma chuyen bay khong ton tai hoac da huy chuyen !!!"<<endl;
@@ -2297,13 +2345,13 @@ void LietkeDSHKCB_Macb(CBPTR First,HKPTR tree){
 
 void LietkeDSHKCB_Tudong(CBPTR First,HKPTR tree){
 	HKPTR q;
-	int icb = HieuungthongtinCBHoatDong(First);
+	int icb = HieuungthongtinCB_HK(First);
 	if(icb == -1){
 		return;
 	}
 	
 	int k = 1;
-	for(CBPTR p = First;p!=NULL  && ( (p->cb.trangthai == 1) || (p->cb.trangthai == 2) );p=p->next){
+	for(CBPTR p = First;p!=NULL ;p=p->next){
 		if(k == icb){
 			system("cls");
 			cout<<"      DANH SACH HANH KHACH THUOC CHUYEN BAY "<<p->cb.ID<<endl;
@@ -2491,9 +2539,9 @@ void Datve(CBPTR &First,HKPTR &tree,Listmaybay dsmb){
 				Thongtinchuyenbay(p->cb);
 
 				// cmnd hanh khach
-				NhapChuoi("So cmnd hanh khach dat ve: ",Cmnddatve);
-				if(KT_So(Cmnddatve) == 0)
-					goto Loop;
+				NhapChuoiCMND("So cmnd hanh khach dat ve: ",Cmnddatve);
+//				if(KT_So(Cmnddatve) == 0)
+//					goto Loop;
 				if(SearchHK(tree,Cmnddatve)==NULL){
 					string yeucau = "So cmnd chua co trong he thong, them thong tin khach hang ? ";
 					int ixacnhan = Hieuungyesno(yeucau);
@@ -2563,7 +2611,7 @@ void Datve(CBPTR &First,HKPTR &tree,Listmaybay dsmb){
 }	
 		
 	
-void HuyVE(CBPTR First,HKPTR tree){
+void HuyVE(CBPTR &First,HKPTR tree){
 	string xacnhan = "Cmnd cua hanh khach chua co trong he thong, Nhap lai ?";
 	string xacnhanxoa = "Ban co chac muon huy ve  ?";
 	char cmndhuyve[11];

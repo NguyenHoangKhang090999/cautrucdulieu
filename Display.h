@@ -10,16 +10,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree);
 int MenuMB(Listmaybay &dsmb,CBPTR &dscb);
 int MenuCB(Listmaybay &dsmb,CBPTR &dscb);
 
-//void gotoxy(int x, int y)
-//{
-//    static HANDLE h = NULL;
-//    if(!h)
-//    {
-//        h = GetStdHandle(STD_OUTPUT_HANDLE);
-//        COORD c = {x,y};
-//        SetConsoleCursorPosition(h,c);
-//    }
-//}
+
 int Drawtext(int line, int cot, int focus, char Text[])
 {
        
@@ -161,11 +152,7 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 	    	return 2;
 		}
 	}while (!(ch == 13 ));
-	LoadDSCB(dscb);
-	UpdateTrangThaiCB(dscb);
-	SapXepCBTheoID(dscb);
-	SaveDSCB(dscb);
-	
+//	UpdateTrangThaiCB(dscb);
 	switch(i){
 		case 2:
 			{
@@ -264,7 +251,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	LoadMB(dsmb);
 	LoadDSCB(dscb);
 	LoadDSHK(tree);
-	UpdateTrangThaiCB(dscb);
+//	UpdateTrangThaiCB(dscb);
 	switch(i){
 		case 2:
 			{
