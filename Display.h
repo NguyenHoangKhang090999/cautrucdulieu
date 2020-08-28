@@ -161,6 +161,10 @@ int MenuCB(Listmaybay &dsmb,CBPTR &dscb){
 	    	return 2;
 		}
 	}while (!(ch == 13 ));
+	LoadDSCB(dscb);
+	UpdateTrangThaiCB(dscb);
+	SapXepCBTheoID(dscb);
+	SaveDSCB(dscb);
 	
 	switch(i){
 		case 2:
