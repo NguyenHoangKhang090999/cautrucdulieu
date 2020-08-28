@@ -685,7 +685,7 @@ void NhapDate(Date &dt){
 void UpdateTrangThaiCB(CBPTR &First){
 	
 
-	CBPTR p;
+	CBPTR p,dscb;
 	 //lay so lieu thoi gian thuc
 //	 int y = 1900 + thoigian->tm_year;
 //	int m = 1 + thoigian->tm_mon;
@@ -705,6 +705,7 @@ void UpdateTrangThaiCB(CBPTR &First){
 		int checkgio;
 		int checkphut=p->cb.date.phut;
 
+	if(p->cb.trangthai == 1 || p->cb.trangthai == 2){
 // thoi gian hoan tat chuyen bay la 5 gio ke tu thoi diem khoi hanh
 	if(y == p->cb.date.nam){
 		if(m == p->cb.date.thang){
@@ -886,6 +887,15 @@ void UpdateTrangThaiCB(CBPTR &First){
 	p->cb.trangthai = 3;
 }
 }
+}
+	
+
+
+	for(p=First;p!=NULL;p=p->next){
+		if(p->cb.trangthai == 3){
+//			SaveDSCB(dscb);	
+		}
+	}
 }
 
 void NhapDSVE(int day, int dong,Chuyenbay &cb){
@@ -1877,6 +1887,8 @@ int Thongkeluotchuyenbay(CBPTR First,Listmaybay dsmb){
 			dsthuchiencb.node[i].soluot = dem;
 		}
 	
+	
+	
 		for(int i=0;i<dsmb.n;i++){
 			for(int j = i+1;j<dsmb.n;j++){
 				if(dsthuchiencb.node[j].soluot>dsthuchiencb.node[i].soluot){
@@ -2113,10 +2125,10 @@ void Xoahanhkhach(HKPTR &tree,CBPTR First){
 //		}else{
 //			rp = p;
 //			if(rp->pRight == NULL){
-//			// p là nút lá hoac la nut chi co cay con ben trai
+//			// p lÃ  nÃºt lÃ¡ hoac la nut chi co cay con ben trai
 //				p = rp->pLeft;
 //			}else if(rp->pLeft == NULL){
-//			// p là nut co cay con ben phai
+//			// p lÃ  nut co cay con ben phai
 //				p = rp->pRight;
 //			}else{
 //				Xoanode2con(rp->pRight);			
@@ -2387,7 +2399,7 @@ int Chonchongoi(Chuyenbay cb,Listmaybay dsmb,string tieude){
 
 
 int Searchchongoi(CBPTR p,char *vitringoi){
-		//p là vi tri cua chuyen bay can dat
+		//p lÃ  vi tri cua chuyen bay can dat
 	for(int i=0;i<p->cb.danhsachve.n;i++){
 		if(p->cb.danhsachve.vecb[i].chongoi.compare(vitringoi)==0 ){
 //		if(strcmp(p->cb.danhsachve.vecb[i].chongoi,vitringoi)==0 ){
