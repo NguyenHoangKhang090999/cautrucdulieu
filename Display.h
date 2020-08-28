@@ -260,7 +260,7 @@ void MenuChinh(Listmaybay &dsmb,CBPTR &dscb,HKPTR &tree){
 	LoadMB(dsmb);
 	LoadDSCB(dscb);
 	LoadDSHK(tree);
-	
+	UpdateTrangThaiCB(dscb);
 	switch(i){
 		case 2:
 			{
