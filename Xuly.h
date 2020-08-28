@@ -21,6 +21,7 @@ int Chonchongoi(Chuyenbay cb,Listmaybay dsmb,string tieude);
 void tomauchu(string chu,int f);
 void SapXepCBTheoID(CBPTR &First);
 void SaveDSHK(HKPTR tree);
+void SaveDSCB(CBPTR First);
 
    
 	
@@ -64,6 +65,49 @@ int sosanh(char *s1,char *s2){
    return flag;
 }
 
+int kiemtrachuoi(char *s)
+{
+ int c=0;
+ for(int i=0;i<strlen(s);i++)
+    {
+       for(int j=48;j<=57;j++)
+       {
+       if(s[i]==j) c=1;//co chua so
+       
+       }
+    }
+ return c;  
+}
+
+int kiemtrakitu(char *s){
+	int a=0;
+ for(int i=0;i<strlen(s);i++){
+ 	if((s[i] < 97 || s[i] > 122 || s[i] < 65 || s[i] > 90) && s[i]) 
+        a = 1; // co ki tu dac biet
+}
+    return a;
+}
+
+int Alphabet(char *s){
+	int b = 0;
+	for(int i=0;i<strlen(s);i++){
+	if((s[i] >= 97 && s[i] <= 122 ) || (s[i] >= 65 && s[i] <= 90)) 
+        b = 1;	//co chua ALPHABET
+	}
+	return b;	
+}
+
+int KT_So(char *s){
+	int d = 0;
+	for(int i=0;i<strlen(s);i++){
+		if(s[i] >= '0' && s[i] <= 9)
+			d=1;	
+	}	
+	
+	return d;
+	//kiem tra chuoi co phai toan so hay khong
+}
+
 
 
 /////////////// May bay ////////////////////
@@ -88,6 +132,10 @@ int NhapMB(Listmaybay &dsmb,Maybay &mb){
 	while(1){
 		cout<<"Thong tin may bay thu "<<dsmb.n+1<<endl;
 		NhapChuoi("Nhap so hieu may bay: ",mb.sohieu);
+		if(Alphabet(mb.sohieu)==0){
+					cout<<"nhap sai!!!"<<endl;
+					return 0;
+				}
 		if(SearchMB(dsmb,mb.sohieu)>=0){
 			cout<<"so hieu may bay da ton tai !!!"<<endl;
 			continue;		
@@ -95,11 +143,11 @@ int NhapMB(Listmaybay &dsmb,Maybay &mb){
 		NhapChuoi("Nhap loai may bay: ",mb.loai);
 		cout<<"Nhap so day may bay(<=9): ";
 		cin>>mb.soday;
-		if(mb.soday<=0) return 0;
+		if(mb.soday<=0 || mb.soday >9) return 0;
 		cout<<"Nhap so dong may bay(<=100): ";
 		cin>>mb.sodong;
 		cout<<endl;
-		if(mb.sodong<=0) return 0;
+		if(mb.sodong<=0 || mb.sodong >100) return 0;
 		
 		return 1;
 	}
@@ -126,27 +174,19 @@ void Themthutu(Listmaybay &dsmb,Maybay mb){
 
 void NhapDSMB(Listmaybay &dsmb){
 	Maybay mb;
-	int soluong;
 	if(dsmb.n == MAXLIST){ 
 		cout<<"danh sach day!!!"<<endl;
 		system("pause");
 		return;
 	}
-	Loop:	
-	cout<<"Nhap so luong may bay can them vao: "; 
-	cin>>soluong; cout<<endl;
-	if((dsmb.n + soluong)> MAXLIST ){
-		cout<<"Danh sach chi co the them duoc "<<MAXLIST-dsmb.n-1<<" may bay"<<endl;
-		goto Loop;
-	}
-	for(int i=0;i<soluong;i++){
+
 		if(NhapMB(dsmb,mb)==0) return;
 		
 		dsmb.nodes[dsmb.n] = new Maybay;
 		*dsmb.nodes[dsmb.n] = mb;
 		dsmb.n++ ;
 //		Themthutu(dsmb,mb);
-	}
+	
 	cout<<"Nhap may bay hoan tat!!!"<<
 	system("pause");
 }
@@ -383,6 +423,10 @@ int HieuchinhMB(Listmaybay &dsmb,CBPTR First){
 		
 		Loop:
 	 	NhapChuoi("Nhap so hieu may bay can dieu chinh: ",mb.sohieu);
+	 	if(Alphabet(mb.sohieu)==0){
+					cout<<"nhap sai!!!"<<endl;
+					goto Loop;
+				}
 	 		
 		if( SearchMB(dsmb,mb.sohieu) != imb && SearchMB(dsmb,mb.sohieu) >= 0){
 			cout<<"So hieu may bay da ton tai"<<endl;
@@ -394,12 +438,12 @@ int HieuchinhMB(Listmaybay &dsmb,CBPTR First){
 		Loop1:
 		cout<<"Nhap so day may bay can dieu chinh(<=9): ";
 		cin>>mb.soday;
-		if(mb.soday<=0) goto Loop1;
+		if(mb.soday<=0 || mb.soday > 9) goto Loop1;
 		Loop2:
 		cout<<"Nhap so dong may bay can dieu chinh(<=100): ";
 		cin>>mb.sodong;
 		cout<<endl;
-		if(mb.sodong<=0) goto Loop2;
+		if(mb.sodong<=0 || mb.sodong > 100) goto Loop2;
 		
 		// dieu chinh thong tin cu = moi
 		*dsmb.nodes[imb] = mb;
@@ -699,6 +743,7 @@ void UpdateTrangThaiCB(CBPTR &First){
 	int y = 2020;
 	int m = 9;
 	int d = 10;
+	int dem = 0;
 	
 	
 	for(p=First; p!= NULL; p=p->next){
@@ -712,6 +757,7 @@ void UpdateTrangThaiCB(CBPTR &First){
 			if(d == p->cb.date.ngay){
 				if((h - p->cb.date.gio) >=5 && min >= p->cb.date.phut){
 					p->cb.trangthai = 3;
+				
 
 				}	
 				
@@ -733,8 +779,10 @@ void UpdateTrangThaiCB(CBPTR &First){
 						
 						if(h == checkgio && min >= checkphut){
 								p->cb.trangthai = 3;
+								
 							}else if(h > checkgio){
 								p->cb.trangthai = 3;
+								
 						}
 								
 					}
@@ -747,6 +795,7 @@ void UpdateTrangThaiCB(CBPTR &First){
 					
 						if(p->cb.date.gio < 19){
 							p->cb.trangthai == 3;
+							
 						
 					}
 					else if(p->cb.date.gio == 19)
@@ -763,17 +812,21 @@ void UpdateTrangThaiCB(CBPTR &First){
 						
 						if(h == checkgio && min >= checkphut){
 								p->cb.trangthai = 3;
+								
 							}else if(h > checkgio){
 								p->cb.trangthai = 3;
+								
 						}
 					}else 
 						p->cb.trangthai = 3;
+						
 					
 			
 			}else if(p->cb.date.thang == 4 || p->cb.date.thang == 6 || p->cb.date.thang == 9 || p->cb.date.thang == 11 ){
 				if(p->cb.date.ngay == 30){
 						if(p->cb.date.gio < 19){
 							p->cb.trangthai == 3;
+							
 						
 					}
 					else if(p->cb.date.gio == 19)
@@ -789,11 +842,14 @@ void UpdateTrangThaiCB(CBPTR &First){
 						
 							if(h == checkgio && min >= checkphut){
 								p->cb.trangthai = 3;
+								
 							}else if(h > checkgio){
 								p->cb.trangthai = 3;
+								
 						}	
 					}else 
 						p->cb.trangthai = 3;
+						
 					
 				}else if(p->cb.date.thang == 2){
 					if(y % 4 == 0 && y % 100 != 0 || y % 400 ==0){
@@ -801,6 +857,7 @@ void UpdateTrangThaiCB(CBPTR &First){
 							
 							if(p->cb.date.gio < 19){
 							p->cb.trangthai == 3;
+							
 						
 					}
 					else if(p->cb.date.gio == 19)
@@ -817,16 +874,20 @@ void UpdateTrangThaiCB(CBPTR &First){
 						
 							if(h == checkgio && min >= checkphut){
 								p->cb.trangthai = 3;
+								
 							}else if(h > checkgio){
 								p->cb.trangthai = 3;
+								
 						}	
 					}else 
 						p->cb.trangthai = 3;
+						
 					}else 
 						if(p->cb.date.ngay == 28){
 							
 							if(p->cb.date.gio < 19){
 							p->cb.trangthai == 3;
+							
 						
 					}
 					else if(p->cb.date.gio == 19)
@@ -843,15 +904,19 @@ void UpdateTrangThaiCB(CBPTR &First){
 						
 							if(h == checkgio && min >= checkphut){
 								p->cb.trangthai = 3;
+								
 							}else if(h > checkgio){
 								p->cb.trangthai = 3;
+								
 						}	
 					}else 
 						p->cb.trangthai = 3;
+						
 				}
 							
 			}else if((m - p->cb.date.thang) > 1)
 				p->cb.trangthai = 3;
+				
 			
 	}else if(y > p->cb.date.nam){
 		if(m == 1 ){
@@ -859,6 +924,7 @@ void UpdateTrangThaiCB(CBPTR &First){
 			if(p->cb.date.ngay == 31){
 				if(p->cb.date.gio < 19){
 							p->cb.trangthai == 3;
+							
 							
 					}else if(p->cb.date.gio == 19)
 						checkgio=0;
@@ -874,28 +940,32 @@ void UpdateTrangThaiCB(CBPTR &First){
 						
 							if(h == checkgio && min >= checkphut){
 								p->cb.trangthai = 3;
+								
 							}else if(h > checkgio){
 								p->cb.trangthai = 3;
+								
 						}
 		}else 	
 			p->cb.trangthai = 3;
+			
 		
 	}else 
 		p->cb.trangthai = 3;
+		
 	
 }else 
 	p->cb.trangthai = 3;
-}
-}
+	
 }
 	
+}
+	
+	
+}
+	
+		SaveDSCB(First);
 
 
-	for(p=First;p!=NULL;p=p->next){
-		if(p->cb.trangthai == 3){
-//			SaveDSCB(dscb);	
-		}
-	}
 }
 
 void NhapDSVE(int day, int dong,Chuyenbay &cb){
@@ -959,18 +1029,6 @@ if(s[i]>='a' && s[i]<='z')
 
 }
 
-char* DoiThanhChuThuong(char s[]){
-	int i;
- for(i=0;i<strlen(s);i++)
-{
-if(s[i]>='a' && s[i]<='z')
- {
-   s[i]=s[i]+32;
- }          
- }
-	return s;	
-}
-
 void xoakt(char s[90],int i)
 {
      for(int j=i;j<strlen(s);j++)
@@ -1008,6 +1066,8 @@ char *temp = new char(st.size()+1);
     return b;
 }
 
+
+
 void NhapDSCB(CBPTR &First,Listmaybay dsmb){
 	CBPTR Last,p;
 	Chuyenbay cb;
@@ -1015,20 +1075,14 @@ void NhapDSCB(CBPTR &First,Listmaybay dsmb){
 	int k;
 
 
-	  do{
+	  
 	  	if(dsmb.n == 0){
 	  		cout<<"Danh sach may bay rong khong the tao chuyen bay!!!"<<endl;
 	  		system("pause");
 	  		return;
 		  }
-	  cout<<"Nhap so chuyen bay muon them vao (n>0): ";
-	  cin>>n; 
-	  if(n == 0)
-	  	return;
-	   }while(n<=0);
 	   
-		for(int i=1 ;i<=n;i++){
-			cout<<"Thong tin chuyen bay "<<i<<" "<<endl;
+	   
 				Loop:
 				system("cls");
 				cout<<"                                              NHAP THONG TIN CHUYEN BAY                                      "<<endl;
@@ -1037,12 +1091,11 @@ void NhapDSCB(CBPTR &First,Listmaybay dsmb){
 				fflush (stdin);
 				cout<<"Nhap dia diem den: "; 
 				gets(cb.diadiem);
-				
-				if(strcmp(cb.diadiem," ")==0 || strcmp(cb.diadiem,"")==0){
-					cout<<"chua nhap dia diem!!!"<<endl;
-					system("pause");
+				if(kiemtrachuoi(cb.diadiem)==1 || Alphabet(cb.diadiem)==0){
+					cout<<"nhap sai!!!"<<endl;
 					goto Loop;
-				}				
+				}
+							
 				DoiThanhInHoa(cb.diadiem);
 				
 					cb.trangthai =1;
@@ -1118,7 +1171,7 @@ void NhapDSCB(CBPTR &First,Listmaybay dsmb){
 				
 		}	
 }
-}
+
 
 
 
@@ -2439,6 +2492,8 @@ void Datve(CBPTR &First,HKPTR &tree,Listmaybay dsmb){
 
 				// cmnd hanh khach
 				NhapChuoi("So cmnd hanh khach dat ve: ",Cmnddatve);
+				if(KT_So(Cmnddatve) == 0)
+					goto Loop;
 				if(SearchHK(tree,Cmnddatve)==NULL){
 					string yeucau = "So cmnd chua co trong he thong, them thong tin khach hang ? ";
 					int ixacnhan = Hieuungyesno(yeucau);
